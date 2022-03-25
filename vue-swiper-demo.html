@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>swiper-demo</title>
+</head>
+<style>
+  html,
+  head,
+  body,
+  div,
+  ul {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    /* font-size: 100%;
+            font: inherit;
+            vertical-align: baseline; */
+  }
+
+  html {
+    font-size: 30px;
+  }
+
+  html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-appearance: none;
+  }
+
+  .newaddWrapper {
+    font-size: 100px;
+  }
+
+  .head {
+    height: 2rem;
+    background-color: #f5f5f5;
+    color: #999999;
+    overflow: hidden;
+  }
+
+  .head .headUl {
+    margin-left: 0.306667rem;
+    list-style-type: none;
+    font-size: 0.8rem;
+    line-height: 2rem;
+  }
+
+  .content {
+    overflow: hidden;
+  }
+
+  .content .itemDiv {
+    position: relative;
+  }
+
+  .content .itemDiv .itemUl {
+    list-style-type: none;
+    margin-left: 0.306667rem;
+    height: 3.533333rem;
+    overflow: hidden;
+    border-bottom: 0.013333rem solid #e9e9e9;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  .content .itemDiv .itemUl .list-1 {
+    font-size: 0.7rem;
+    color: #333333;
+    margin: 0.493333rem 0 0.186667rem 0;
+    height: 0.426667rem;
+    line-height: 0.426667rem;
+  }
+
+  .content .itemDiv .itemUl .list-1 .listspan-1 {
+    float: right;
+    text-align: right;
+    color: #999999;
+    margin-right: 1.2rem;
+    width: 5.066667rem;
+  }
+
+  .content .itemDiv .itemUl .list-2 {
+    font-size: 0.4rem;
+    color: #333333;
+    margin: 0.493333rem 0 0.186667rem 0;
+    height: 0.426667rem;
+    line-height: 0.426667rem;
+  }
+
+
+  .content .itemDiv .itemUl .list-3 {
+    font-size: 0.4rem;
+    color: #333333;
+    margin: 0.493333rem 0 0.186667rem 0;
+    height: 0.426667rem;
+    line-height: 0.426667rem;
+  }
+
+  .content .itemDiv .itemUl .icon-more {
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    font-size: 0.4rem;
+    position: absolute;
+    right: 0.586667rem;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  .content .itemDiv .btnArray {
+    position: absolute;
+    top: 0;
+    right: -7rem;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #fff;
+    height: 3.533333rem;
+    width: 7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content .itemDiv .btnArray .check {
+    width: 50%;
+    background: #f29901;
+    height: 100%;
+    line-height: 3.3rem;
+  }
+
+
+  .content .itemDiv .btnArray .delete {
+    width: 50%;
+    background: red;
+    height: 100%;
+    line-height: 3.3rem;
+  }
+</style>
+
+<body>
+  <div id="app">
+    <div class="newaddWrapper">
+      <div class="head">
+        <ul class="headUl">
+          <li>{{title}}</li>
+        </ul>
+      </div>
+      <div class="content">
+        <div class="itemDiv"
+             v-swiper="{
+               node: '.btnArray', 
+               widthNode: '.btnArray', 
+               handle: true,
+               parentNode:'.newaddWrapper',
+           }">
+          <ul class="itemUl">
+            <li class="list-1">
+              <span class="listspan-1">订单1</span>
+              <span class="listspan-2">1.00PCS</span>
+            </li>
+            <li class="list-2">0000000001</li>
+            <li class="list-3">111</li>
+            <li class="icon-more"></li>
+          </ul>
+          <div class="btnArray">
+            <div class="check" @click.stop="checkConfirm(list,index,$event)">批改仓库</div>
+            <div class="delete" @click.stop="deletConform(list)">删除</div>
+          </div>
+        </div>
+        <!--  -->
+        <div class="itemDiv"
+             v-swiper="{
+               node: '.btnArray', 
+               widthNode: '.btnArray', 
+               handle: true,
+               parentNode:'.newaddWrapper',
+           }">
+          <ul class="itemUl">
+            <li class="list-1">
+              <span class="listspan-1">订单1</span>
+              <span class="listspan-2">1.00PCS</span>
+            </li>
+            <li class="list-2">0000000001</li>
+            <li class="list-3">111</li>
+            <li class="icon-more"></li>
+          </ul>
+          <div class="btnArray">
+            <div class="check" @click.stop="checkConfirm(list,index,$event)">批改仓库</div>
+            <div class="delete" @click.stop="deletConform(list)">删除</div>
+          </div>
+        </div>
+        <div class="itemDiv"
+             v-swiper="{
+               node: '.btnArray', 
+               widthNode: '.btnArray', 
+               handle: true,
+               parentNode:'.newaddWrapper',
+           }">
+          <ul class="itemUl">
+            <li class="list-1">
+              <span class="listspan-1">订单1</span>
+              <span class="listspan-2">1.00PCS</span>
+            </li>
+            <li class="list-2">0000000001</li>
+            <li class="list-3">111</li>
+            <li class="icon-more"></li>
+          </ul>
+          <div class="btnArray">
+            <div class="check" @click.stop="checkConfirm(list,index,$event)">批改仓库</div>
+            <div class="delete" @click.stop="deletConform(list)">删除</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+
+  function swipeLeft(el, binding) {
+    const _this = this
+    this._init(el, binding)
+    this.$el.addEventListener(
+      'touchstart',
+      function (e) {
+        _this.start(e, el, binding)
+      },
+      false
+    )
+    this.$el.addEventListener(
+      'touchmove',
+      function (e) {
+        _this.move(e, el, binding)
+      },
+      false
+    )
+    this.$el.addEventListener(
+      'touchend',
+      function (e) {
+        _this.end(e, el, binding)
+      },
+      false
+    )
+  }
+
+  swipeLeft.prototype._init = function (el) {
+    this.$el = el
+    this.$el.style.WebkitTransform = 'translateX(0px)'
+
+    this.initX = 0 // 触摸位置X
+    this.initY = 0 // 触摸位置Y
+    this.moveX = 0 // 滑动时的位置
+    this.moveToX = 0 // 目标对象位置
+
+    this.childNode = null
+    this.widthNode = null
+    this.moveDistance = 0
+  }
+  swipeLeft.prototype.start = function (e, el, binding) {
+    const targetTouches = e.touches[0]
+    this.initX = targetTouches.clientX
+    this.initY = targetTouches.clientY
+    this.moveToX = this.$el.style.WebkitTransform.replace(/translateX\(/g, '').replace(/px\)/g, '') * 1
+
+    this.childNode = this.$el.querySelector(binding.value.node)
+    this.widthNode = this.$el.querySelector(binding.value.widthNode)
+    this.parentNode = document.querySelector(binding.value.parentNode)
+
+    this.moveDistance = (this.$el.offsetWidth * 40) / 100 //this.widthNode.offsetWidth;
+
+    this.$el.style.transition = 'unset'
+    this.childNode.style.transition = 'unset'
+    this.resetSiblings()
+
+  }
+
+  swipeLeft.prototype.end = function (e, el, binding) {
+    if (e.changedTouches.length == 1) {
+      this.moveToX = this.$el.style.WebkitTransform.replace(/translateX\(/g, '').replace(/px\)/g, '') * 1
+
+      if (this.moveToX > -this.moveDistance / 2) {
+        this.$el.style.WebkitTransform = 'translateX(' + 0 + 'px)'
+        this.$el.style.transition = '.4s ease all'
+        this.moveToX = 0
+      } else {
+        this.$el.style.WebkitTransform = 'translateX(' + -this.moveDistance + 'px)'
+        this.moveToX = -this.moveDistance
+      }
+
+      this.childNode.style.width = this.moveDistance + 'px'
+      this.childNode.style.right = -this.moveDistance + 'px'
+
+      this.$el.style.transition = '.4s ease all'
+      this.childNode.style.transition = '.4s ease all'
+
+      this.moveX = 0
+      this.moveY = 0
+    }
+  }
+
+  swipeLeft.prototype.move = function (e, el, binding) {
+    const targetTouches = e.touches[0]
+    this.moveX = targetTouches.clientX - this.initX
+    this.moveY = targetTouches.clientY - this.initY
+    this.$el.style.transition = 'unset'
+
+    if (this.moveToX === 0) {
+      if (this.moveX >= 0) {
+        // 往右滑动
+        console.log("往右滑动")
+        this.$el.style.WebkitTransform = 'translateX(' + 0 + 'px)'
+      } else if (this.moveX < 0) {
+        // 往左滑动
+        let moveLeft = Math.abs(this.moveX)
+        this.$el.style.WebkitTransform = 'translateX(' + -moveLeft + 'px)'
+        if (moveLeft > this.moveDistance) {
+          console.log("移动距离过大")
+          moveLeft = this.moveDistance + moveLeft / 10
+          this.$el.style.WebkitTransform = 'translateX(' + -moveLeft + 'px)'
+        }
+      }
+    } else if (this.moveToX < 0) {
+      console.log('this.moveToX < 0 ')
+      if (this.moveX >= 0) {
+        //  向右滑动
+        let moveRight = -this.moveDistance + Math.abs(this.moveX)
+        this.$el.style.WebkitTransform = 'translateX(' + moveRight + 'px)'
+        if (moveRight > 0) {
+          moveRight = 0
+          this.$el.style.WebkitTransform = 'translateX(' + moveRight + 'px)'
+        }
+      } else {
+        //向左滑动
+        let moveRight = -this.moveDistance
+        moveRight += this.moveX / 10
+        this.$el.style.WebkitTransform = 'translateX(' + moveRight + 'px)'
+      }
+    }
+    // 算出平方根
+    let sideL = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY)
+
+    if (Math.abs(this.moveY) / sideL < 1 / 2) {
+      this.parentNode.style['overflowY'] = 'hidden'
+    } else {
+      this.parentNode.style['overflowY'] = 'auto'
+    }
+
+  }
+
+  swipeLeft.prototype.resetSiblings = function () {
+    let className = this.$el.className
+    let siblings = document.querySelectorAll(`.${className}`)
+    siblings.forEach((el, i) => {
+      if (el !== this.$el) {
+        el.style.WebkitTransform = 'translateX(0px)'
+      }
+    })
+  }
+
+  swipeLeft.prototype._setChildWidth = function (width) {
+    // width = '320';
+    this.childNode.style.width = width + 'px'
+    this.childNode.style.right = -width + 'px'
+  }
+
+  Vue.directive('swiper', {
+    bind: function (el, binding) {
+      if (binding.value.handle) {
+        new swipeLeft(el, binding)
+      }
+    },
+  })
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        title: '模仿一下',
+        message: '信息'
+      }
+    },
+  })
+</script>
+
+</html>
