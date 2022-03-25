@@ -1,17 +1,17 @@
-// 立即执行函数
+/*!
+ * Vue.js v2.6.8
+ * (c) 2022.3.25-G.Y
+ * // 立即执行函数
+ */
 ;(function (global, factory) {
-	// 遵循UMD规范
-	if (typeof exports === 'object' && typeof module !== 'undefined') {
-		module.exports = factory()
-	} else if (typeof define === 'function' && define.amd) {
-		define(factory)
-	} else {
-		global = global || self
-		global.Vue = factory()
-	}
+	// 遵循umd规范
+	typeof exports === 'object' && typeof module !== 'undefined'
+		? (module.exports = factory())
+		: typeof define === 'function' && define.amd
+		? define(factory)
+		: ((global = global || self), (global.Vue = factory()))
 })(this, function () {
-	;('use strict')
-
+	'use strict'
 	/**
 	 * Always return false.
 	 */
@@ -93,10 +93,24 @@
 		this._init(options)
 	}
 
+	var uid$3 = 0
 	function initMixin(Vue) {
 		console.log('我是 initMixin')
 		Vue.prototype._init = function (options) {
 			console.log('我是 _init函数')
+			var vm = this
+			// a uid
+			vm._uid = uid$3++
+			var startTag, endTag
+
+			// if (config.performance && mark) {
+			// 	vm._name = formatComponentName(vm, false)
+			// 	mark(endTag)
+			// 	measure('vue ' + vm._name + ' init', startTag, endTag)
+			// }
+			if (vm.$options.el) {
+				vm.$mount(vm.$options.el)
+			}
 		}
 	}
 	function stateMixin(Vue) {
