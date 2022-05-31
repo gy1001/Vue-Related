@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>07-常用模版语法讲解</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: '<strong>hello world</strong>',
+          title: '我是悬浮才显示的',
+          inputDisabled: false,
+        }
+      },
+      methods: {},
+      template: `
+        <div>
+          <span v-bind:title="title" v-html="message"></span>
+          <input :disabled="inputDisabled" />
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
