@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>04-todo-list-optimize</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          list: [],
+          inputValue: '',
+        }
+      },
+      methods: {
+        handleAddItem() {
+          if (this.inputValue) {
+            this.list.push(this.inputValue)
+            this.inputValue = ''
+          }
+        },
+      },
+      template: `
+        <div>
+          <input v-model="inputValue" />
+          <br />
+          <button @click="handleAddItem">增加</button>
+          <ul>
+            <todo-item v-for="(item, itemIndex) in list" :index="itemIndex" :content="item"></todo-item>
+          </ul>
+        </div>
+      `,
+    })
+    app.component('todo-item', {
+      data() {
+        return {}
+      },
+      props: ['content', 'index'],
+      template: `
+        <div>
+          <li>{{index}} : {{content}}</li>
+        </div>
+      `,
+    })
+    app.mount('#root')
+  </script>
+</html>
