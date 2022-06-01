@@ -11,19 +11,34 @@
     <div id="root">我是初始化内容</div>
   </body>
   <script>
+    // 模板语法 {{}}
+    // v-html 渲染html内容
+    // v-once 只动态渲染一次
+    // v-bind:xx= 简化为 :xx=
+    // v-on:click= 简化为 @click
+    // 动态属性 :[keyName]=''
+    // 事件修饰符：.prevent,.stop等
     const app = Vue.createApp({
       data() {
         return {
           message: '<strong>hello world</strong>',
           title: '我是悬浮才显示的',
           inputDisabled: false,
+          onceMsg: '我是onceMsg',
+          keyName: 'my-props',
         }
       },
-      methods: {},
+      methods: {
+        onceBtnClick() {
+          this.onceMsg = 'onceMsg改变了，但是 v-once 内的内容不会跟随发生变化'
+        },
+      },
       template: `
         <div>
-          <span v-bind:title="title" v-html="message"></span>
+          <span :[keyName]="title" v-bind:title="title" v-html="message"></span>
           <input :disabled="inputDisabled" />
+          <div v-once>v-once：{{onceMsg}}</div>
+          <button @click.prevent="onceBtnClick">改变onceMsg</button>
         </div>
       `,
     })
