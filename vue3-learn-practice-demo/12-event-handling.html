@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>12-事件处理</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          counter: 0,
+        }
+      },
+      methods: {
+        handleClick(number, event) {
+          console.log(event)
+          this.counter += number
+        },
+        handleClickTwo(event) {
+          console.log('点击事件2', event)
+        },
+        handleClickModifier() {},
+      },
+      template: `
+        <div>
+          {{counter}}
+          <button @click="handleClick(2, $event), handleClickTwo($event)">点击变更数组</button>
+          <hr />
+          事件修饰符:.stop、.prevent、.self、.capture、.once、.passive
+          按键修饰符：.enter、.tab、.esc、.space、.up、.down、.left、.right
+          鼠标修饰符： left、right、middle
+          精确修饰符：exact
+          <button @click.self="handleClickModifier">修饰符</button>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
