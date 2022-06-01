@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>08-数据，方法，计算属性和侦听器</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // computed:当计算属性依赖的内容发生变化时。才会重新执行
+    // methods: 主要页面重新渲染，才会重新计算
+    // computed 和 methods 都能实现的功能，建议使用computed, 因为computed有缓存优化
+    // computed 和 watch 都能实现的功能，建议使用computed，因为computed更加简洁
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello world',
+          price: 500,
+          count: 2,
+        }
+      },
+      // 方法
+      methods: {
+        handleClick() {
+          console.log('click')
+        },
+        formatStr(str) {
+          return String(str).toUpperCase()
+        },
+        getTime() {
+          return Date.now()
+        },
+        btnClick() {
+          this.message += '1'
+        },
+        changePrice() {
+          this.price += 1
+        },
+      },
+      // 计算属性
+      computed: {
+        total() {
+          return this.price * this.count
+        },
+        computedTime() {
+          return Date.now()
+        },
+      },
+      // 侦听器
+      watch: {
+        // 监听属性 price 的变化
+        price(newValue, oldValue) {
+          setTimeout(() => {
+            console.log('price发生变化了，todo-something', newValue, oldValue)
+          }, 1000)
+        },
+      },
+      template: `
+        <div @click="handleClick">
+          {{message}}
+          <br />
+          <span>{{formatStr(message)}}</span>
+          <br />
+          单价{{price}},数量：{{count}}
+          总价：{{total}}
+          <br/>
+          computed 内的时间:{{computedTime}}
+          <br/>
+          methods  内的时间:{{getTime()}}
+          <button @click="btnClick">
+            点击我改变页面中的一个内容，导致内容重现渲染，注意观察 computed 和 methods 显示的时间戳，前者 computed 不会变化，后者 methods 会发生变化
+          </button>
+           <button @click="changePrice">
+            改变price
+          </button>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
