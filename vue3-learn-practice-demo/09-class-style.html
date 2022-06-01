@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>09-样式绑定语法</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <style>
+    .red {
+      color: red;
+    }
+    .green {
+      color: green;
+    }
+  </style>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello world',
+          classString: 'red',
+          classObject: {
+            red: true,
+            green: false,
+          },
+          classArray: ['red', 'green', { brown: true, yellow: false }],
+          styleObject: {
+            color: 'orange',
+            backgroundColor: 'lightgray',
+          },
+        }
+      },
+      methods: {
+        toggleColor() {
+          this.classString = 'green'
+        },
+        toggleColorObj() {
+          this.classObject.green = !this.classObject.green
+        },
+      },
+      template: `
+        <div :class="classString">
+          {{message}}
+          <button @click="toggleColor">点击更换颜色</button>
+          <hr />
+          对象绑定样式{{classObject}}
+          <br />
+          <span :class="classObject">我是对象绑定的样式文本</span>
+          <button @click="toggleColorObj">点击切换绿色颜色属性</button>
+          <hr />
+          数组绑定样式{{classArray}}: 注意查看 元素中的class 属性
+          <br />
+          <span :class="classArray">我是数组绑定的样式文本</span>
+          <hr />
+          我是demo 组件,且组件只有一个根节点
+          <br />
+          <demo class="green" />
+          <hr />
+          我是 demo2 组件,且组件有多个根节点。可以，使用 $attrs.class 来为某一个节点绑定，组件上的 class
+          <demo2 class="green" />
+          <hr />
+          我是行内样式字符串: style="color: gray"
+          <demo style="color: gray" />
+          <hr />
+          我是行内样式对象变量：:style={{styleObject}}
+          <demo :style="styleObject" />
+        </div>
+      `,
+    })
+    app.component('demo', {
+      template: `
+        <div>
+          hello i am demo component
+        </div>
+      `,
+    })
+    app.component('demo2', {
+      template: `
+        <div :class="$attrs.class">one</div>
+        <div>two</div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
