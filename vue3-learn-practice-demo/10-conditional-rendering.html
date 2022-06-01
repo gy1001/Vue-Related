@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>10-条件渲染</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello world',
+          show: true,
+          conditionalTwo: true,
+        }
+      },
+      methods: {
+        toggleShow() {
+          this.show = !this.show
+        },
+      },
+      template: `
+        <div>
+          使用 v-if 控制显隐
+          <br />
+          <span v-if="show">{{message}}</span>
+          <span v-else-if="conditionalTwo">else-if</span>
+          <span v-else>else</span>
+          <br />
+          <button @click="toggleShow">切换显示/隐藏</button>
+          <hr />
+          使用 v-show 控制显隐
+          <br />
+          <span v-show="show">{{message}}</span>
+          <br />
+          <button @click="toggleShow">切换显示/隐藏</button>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
