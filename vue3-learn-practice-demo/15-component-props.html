@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>15-组件间传值及传值校验</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello',
+          content: 1,
+        }
+      },
+      template: `
+        <div>
+          <test :msg="message" />
+          <test2 :content="content" />
+          <test3 :content="1234" />
+        </div>
+      `,
+    })
+    app.component('test', {
+      props: ['msg'],
+      data() {
+        return {
+          count: 1,
+        }
+      },
+      template: `
+        <div>
+          父组件传递的属性值msg：{{msg}}
+          <div @click="count += 1"> {{count}}</div>
+        </div>
+      `,
+    })
+    // test2 对传递值进行校验
+    app.component('test2', {
+      props: {
+        content: String,
+        // 需要的是 string ,如果传递的是其他类型的数据，控制台会进行warn提示
+        // 同样的也支持 Boolean、Array、Function、Object、Symbol 等
+        // content: Function,
+      },
+      template: `
+        <div>
+          父组件传递的属性值 content：{{content}}
+        </div>
+      `,
+    })
+    // test3 对传递值进行校验: 另一种方式
+    app.component('test3', {
+      props: {
+        content: {
+          type: Number,
+          required: true, // 属性值必传，否则控制台会报警告
+          // default: 123, // 默认值
+          // default 也支持函数
+          default: () => {
+            return 456
+          },
+          validator: (value) => {
+            console.log(value)
+            if (value >= 1000) {
+              console.log('属性值必须不大于1000')
+              return false
+            }
+            return true
+          },
+        },
+      },
+      template: `
+        <div>
+          父组件传递的属性值 content：{{content}}
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
