@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>13-表单输入绑定</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // input textarea checkbox radio select
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello',
+          checkInput: true,
+          checkInputArr: [],
+          radioValue: '',
+          radioValueString: '',
+          selectValue: 'A',
+          selectValueArr: [],
+          toggle: 'yes',
+        }
+      },
+      methods: {
+        handleClickTwo(event) {},
+      },
+      template: `
+        <div>
+          <input v-model="message" />
+          <br />
+          {{message}}
+          <br />
+          <br />
+          <textarea
+            v-model="message"
+          />
+          <hr />
+          单个checkbox：checkInput: {{checkInput}}
+          <input type="checkbox" v-model="checkInput"  />我是单个checkbox
+          <hr />
+          多个checkbox：checkInputArr: {{checkInputArr}}
+          <br />
+          <input type="checkbox" v-model="checkInputArr" value="唐僧" />我是唐僧
+          <input type="checkbox" v-model="checkInputArr" value="孙悟空" />我是孙悟空
+          <input type="checkbox" v-model="checkInputArr" value="猪八戒" />我是猪八戒
+          <input type="checkbox" v-model="checkInputArr" value="沙僧" />我是沙僧
+          <hr />
+          单个 radio: radioValue: {{radioValue}}
+          <input type="radio" v-model="radioValue" value="singleRadio" />我是单个 radio
+          <hr />
+          多个 radio: radioValueString: {{radioValueString}}
+          <br />
+          <input type="radio" v-model="radioValueString" value="唐僧" />我是唐僧
+          <input type="radio" v-model="radioValueString" value="孙悟空" />我是孙悟空
+          <input type="radio" v-model="radioValueString" value="猪八戒" />我是猪八戒
+          <input type="radio" v-model="radioValueString" value="沙僧" />我是沙僧
+          <hr />
+          使用 select: selectValue:  {{selectValue}}
+          <br />
+          <select v-model="selectValue" >
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+          <hr />
+          select 也可以支持多选 multiple: selectValueArr :{{selectValueArr}}
+          <br />
+          <select v-model="selectValueArr" multiple>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+          <hr />
+          true-value 和 false-value 是 Vue 特有的 attributes 且仅会在 v-model 存在时工作
+          <br />
+          toggle的值：{{toggle}}
+          <input type="checkbox" v-model="toggle" true-value="yes" false-value="no" />
+          <hr />
+          修饰符：lazy、number、trim
+          <br />
+          <input v-model.lazy="message" />
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
