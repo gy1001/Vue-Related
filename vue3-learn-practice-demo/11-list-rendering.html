@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>11-列表渲染</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 注意：当它们同时存在于一个节点上时，v-if 比 v-for 的优先级更高。这意味着 v-if 的条件将无法访问到 v-for 作用域内定义的变量别名：
+    const app = Vue.createApp({
+      data() {
+        return {
+          listArray: ['唐僧', '孙悟空', '猪八戒', '沙僧'],
+          listObject: {
+            first: '唐僧',
+            second: '孙悟空',
+            third: '猪八戒',
+            fourth: '沙僧',
+          },
+        }
+      },
+      methods: {
+        handleClick() {
+          // 1、使用数组的变更函数 push pop shift unshift splice sort reverse
+          // this.listArray.push('hello')
+          // this.listArray.pop()
+          // this.listArray.shift()
+          // this.listArray.unshift('hello 啊')
+          // this.listArray.reverse()
+
+          // 2、还可以直接改变数组
+          // this.listArray = ['bey', 'world']
+          //   .concat('new')
+          //   .filter((item) => item !== 'world')
+
+          //  3. 直接更新数组的某一项内容（新版本支持，旧版本不支持如此）
+          this.listArray[0] = '唐三藏'
+        },
+
+        handleClickObj() {
+          this.listObject.age = 100
+          this.listObject.sex = '男'
+        },
+      },
+      template: `
+        <div>
+          循环一个数组：{{listArray}}
+          <button @click="handleClick">点击变更数组</button>
+          <br />
+          <div v-for="(item, itemIndex) in listArray" :key="item">
+            {{item}}
+          </div>
+          <hr />
+          循环一个对象：{{listObject}}
+          <button @click="handleClickObj">点击变更对象</button>
+          <br />
+          <div v-for="(value, key) in listObject" :key="key">
+            {{value}} is {{key}}
+          </div>
+          <hr />
+          循环一个数字：10
+          <br />
+          <ul v-for="item in 10" :key="item">
+            <li>{{item}}</li>
+          </ul>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
