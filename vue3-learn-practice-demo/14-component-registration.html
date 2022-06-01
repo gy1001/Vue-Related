@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>14-组件的定义及复用性，局部组件和全局组件</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 组件的定义
+    // 组件的复用性
+    // 全局组件：定义了以后，处处可以使用，性能不高，但是使用方便，名字建议 小写字母，中间用 - 链接
+    // 局部组件：定义了以后，要注册以后才能使用，性能比较高，使用起来稍微麻烦点，建议大写驼峰式命名
+    // 局部组件使用时，要做一个名字和组件之间的映射对象
+
+    // 局部组件变量名字建议大写
+    const SelfCounter = {
+      data() {
+        return {
+          count: 2,
+        }
+      },
+      template: `
+        <div @click="count += 1"> {{count}}</div>
+      `,
+    }
+
+    const app = Vue.createApp({
+      // 局部组件
+      components: {
+        'self-counter': SelfCounter,
+      },
+      data() {
+        return {
+          message: 'hello',
+        }
+      },
+      template: `
+        <div>
+          <counter-parent />
+          <counter />
+          <counter />
+          <self-counter />
+        </div>
+      `,
+    })
+
+    // 组件数据各自独立，互不影响
+    app.component('counter-parent', {
+      template: '<counter />',
+    })
+    app.component('counter', {
+      data() {
+        return {
+          count: 1,
+        }
+      },
+      template: `
+       <div @click="count += 1"> {{count}}</div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
