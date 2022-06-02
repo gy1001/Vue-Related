@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>17-Non-Props属性是什么</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // inheritAttrs: true/false
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello',
+        }
+      },
+      template: `
+        <div>
+          <test :msg="message" />
+        </div>
+      `,
+    })
+    app.component('test', {
+      // inheritAttrs: false, 这里注释后，在控制台元素身上可以看到属性值，否则就没有
+      template: `
+        <div>hello world</div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
