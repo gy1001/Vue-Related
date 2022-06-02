@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>22-异步组件和动态组件</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 动态组件：根据数据的变化，结合 component 这个标签，来随时动态切换组件的显示
+    // 异步组件：
+    const app = Vue.createApp({
+      data() {
+        return {
+          currentItem: 'input-item',
+        }
+      },
+      methods: {
+        handleClick() {
+          this.currentItem =
+            this.currentItem === 'common-item' ? 'input-item' : 'common-item'
+        },
+      },
+      template: `
+        <div>
+          常规写法：
+          <br />
+          <input-item v-show="currentItem === 'input-item'"></input-item>
+          <common-item v-show="currentItem ==='common-item'"></common-item>
+          <br />
+          <button @click="handleClick">切换显示</button>
+          <hr />
+          使用动态组件:
+          <br />
+          注意：在输入框中输入内容切换后内容不会保留
+          <br />
+          写法 component :is={{currentItem}}
+          <br />
+          <component :is="currentItem" />
+          <br />
+          <button @click="handleClick">切换显示</button>
+          <hr />
+          使用动态组件+keep-alive:
+          <br />解决输入框中输入内容切换后内容不会保留的问题
+          <br />
+          <keep-alive>
+            <component :is="currentItem" />
+          </keep-alive>
+          <br />
+          <button @click="handleClick">切换显示</button>
+          <hr />
+          异步组件: 4s后渲染
+          <async-common-item />
+        </div>
+      `,
+    })
+
+    const AsyncComponentItem = Vue.defineAsyncComponent(() => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            template: '<div>this is an async component</div>',
+          })
+        }, 4000)
+      })
+    })
+
+    app.component('async-common-item', AsyncComponentItem)
+
+    app.component('input-item', {
+      data() {
+        return {}
+      },
+      template: `
+        <input placeholder="请输入关键字" />
+      `,
+    })
+
+    app.component('common-item', {
+      data() {
+        return {}
+      },
+      template: `
+        <div>hello world</div>
+      `,
+    })
+
+    const vm = app.mount('#root')
+  </script>
+</html>
