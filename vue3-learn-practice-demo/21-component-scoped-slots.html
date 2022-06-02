@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>21-作用域插槽</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {}
+      },
+      methods: {},
+      template: `
+        <div>
+          作用域插槽，这里也可以使用解构
+          能让父组件中的插槽内容使用 子组件中的数据
+          <basic-list v-slot="slotProps"> 
+            <div>
+              item: {{slotProps.item}}---key:{{slotProps.key}}
+            </div>
+          </basic-list>
+        </div>
+      `,
+    })
+    app.component('basic-list', {
+      data() {
+        return {
+          list: [1, 2, 3, 4, 5, 6, 7, 8],
+        }
+      },
+      template: `
+        <ul>
+          我是子组件直接渲染的
+          <li v-for="item in list" :key="item">{{item}}</li>
+          <hr />
+          我是作用域插槽渲染的
+          <slot :item="item" v-for="item in list" :key="item">
+          </slot>
+        </ul>
+      `,
+    })
+
+    const vm = app.mount('#root')
+  </script>
+</html>
