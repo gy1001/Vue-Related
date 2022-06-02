@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>23-基础语法知识点查缺补漏.</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // v-once: 只渲染一次，即使数据发生变化
+    // ref: 实际上是获取 DOM 节点的一个语法, 还可以获取组件的引用
+    // provide/inject
+    const app = Vue.createApp({
+      data() {
+        return {
+          count: 1,
+        }
+      },
+      // provide 也可以是一个函数，这种提供方式不是响应式的，后续会解决
+      // provide() {
+      //   return {
+      //     provideNum: this.count,
+      //   }
+      // },
+      provide: {
+        provideNum: 222,
+      },
+      methods: {
+        handleClick() {
+          this.count += 1
+        },
+      },
+      mounted() {
+        this.$refs.count.innerHTML = 'hello'
+        this.$refs.commonItem.sayHello()
+      },
+      template: `
+        <div>
+          <span @click="handleClick" v-once>{{count}}</span>
+          <br/>
+          <span ref="count">{{count}}</span>
+          <br/>
+          <common-item ref="commonItem" />
+          <br/>
+          <basic-child />
+        </div>
+      `,
+    })
+
+    app.component('common-item', {
+      data() {
+        return {}
+      },
+      methods: {
+        sayHello() {
+          console.log('我是 common-item 内部的 sayHello 方法')
+        },
+      },
+      template: `
+        <div>hello world</div>
+      `,
+    })
+
+    app.component('basic-child', {
+      template: `
+        <basic-child-child></basic-child-child>
+      `,
+    })
+
+    app.component('basic-child-child', {
+      inject: ['provideNum'],
+      template: `
+        <div>{{provideNum}}</div>
+      `,
+    })
+
+    const vm = app.mount('#root')
+  </script>
+</html>
