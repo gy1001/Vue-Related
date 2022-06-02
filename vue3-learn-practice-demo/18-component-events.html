@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>18-父子组件间如何通过事件进行通信</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'hello',
+          count: 1,
+          nameCount: 2,
+        }
+      },
+      methods: {
+        handleTestClick(params) {
+          console.log('handleTestClick', params)
+          this.message += 'h'
+        },
+      },
+      template: `
+        <div>
+          {{message}}
+          <test @add-one="handleTestClick" :msg="message" />
+          <hr />
+          组件上的v-model:
+          <test2 v-model="count"/>
+          <hr />
+          组件上的v-model起别名:
+          <test3 v-model:myName="nameCount"/>
+        </div>
+      `,
+    })
+    app.component('test', {
+      methods: {
+        handleClick() {
+          this.$emit('addOne', 2)
+        },
+      },
+      // emits: ['addOne'], // 支持数组，也支持对象
+      emits: {
+        addOne(count) {
+          console.log(count)
+          if (count > 0) {
+            return true
+          }
+          console.log('参数需大于0')
+          return false
+        },
+      },
+      props: ['msg'],
+      template: `
+        <div @click="handleClick">{{msg}}</div>
+      `,
+    })
+
+    app.component('test2', {
+      methods: {
+        handleClick() {
+          this.$emit('update:modelValue', this.modelValue + 3)
+        },
+      },
+      props: ['modelValue'],
+      template: `
+        <div @click="handleClick">{{modelValue}}</div>
+      `,
+    })
+
+    app.component('test3', {
+      methods: {
+        handleClick() {
+          this.$emit('update:myName', this.myName + 1)
+        },
+      },
+      props: ['myName'],
+      template: `
+        <div @click="handleClick">{{myName}}</div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
