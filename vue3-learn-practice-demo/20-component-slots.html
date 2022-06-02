@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>20-使用插槽和具名插槽解决组件内容传递问题</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // slot 可以插入一个元素，也可以是一个组件
+    // 父模版中调用的数据属性，使用的都是父模版中的数据
+    // 子模板中调用的数据属性，使用的都是子模板中的数据
+    const app = Vue.createApp({
+      data() {
+        return {
+          text: '提交',
+        }
+      },
+      methods: {},
+      template: `
+        <div>
+          这里希望提交按钮是一个div
+          <basic-form>
+            <div>{{text}}</div>
+            <test></test>
+          </basic-form>
+          <hr />
+          这里希望提交按钮是一个button
+          <basic-form>
+            <button>{{text}}</button>
+          </basic-form>
+          <hr />
+          这里插槽也可以拥有一个默认值
+          <basic-form>
+          </basic-form>
+          <hr />
+          具名插槽
+          <basic-layout>
+            <template v-slot:header>i am header</template>
+            <template #footer>i am footer</template>
+          </basic-layout>
+        </div>
+      `,
+    })
+
+    app.component('test', {
+      template: '<div>占位组件</div>',
+    })
+
+    app.component('basic-form', {
+      methods: {
+        handleClick() {
+          console.log('click')
+        },
+      },
+      template: `
+        <div>
+          <input />
+          <br />
+          <div @click="handleClick">
+            <slot>我是slot默认值</slot>
+          </div>
+        </div>
+      `,
+    })
+
+    app.component('basic-layout', {
+      methods: {
+        handleClick() {
+          console.log('click')
+        },
+      },
+      template: `
+        <div>
+          <slot name="header"></slot>
+          <div>content</div>
+          <slot name="footer"></slot>
+        </div>
+      `,
+    })
+
+    const vm = app.mount('#root')
+  </script>
+</html>
