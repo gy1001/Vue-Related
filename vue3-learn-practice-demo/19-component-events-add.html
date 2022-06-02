@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>19-组件间双向绑定高级内容-选学</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          nameCount: 2,
+          otherCount: 1,
+          test2Name: 'hello',
+          test3Name: 'wold',
+        }
+      },
+      methods: {},
+      template: `
+        <div>
+          组件的 v-model 支持多个
+          <test v-model:myName="nameCount" v-model:other="otherCount" />
+          <hr />
+          处理 无参数只有修饰符的 v-model 
+          <test2 v-model.upperCase="test2Name" />
+          <hr />
+          处理 又有参数又有修饰符的 v-model 
+          <test3 v-model:myName.upperCase="test3Name" />
+        </div>
+      `,
+    })
+
+    app.component('test', {
+      methods: {
+        handleClick() {
+          this.$emit('update:myName', this.myName + 1)
+        },
+        handleOtherClick() {
+          this.$emit('update:other', this.other + 3)
+        },
+      },
+      props: ['myName', 'other'],
+      template: `
+        <div @click="handleClick">父组件使用 v-model:myName 传递的： {{myName}}</div>
+        <div @click="handleOtherClick">父组件使用 v-model:other 传递的：  {{other}}</div>
+      `,
+    })
+
+    app.component('test2', {
+      methods: {
+        handleClick() {
+          let value = this.modelValue + 'h'
+          if (this.modelModifiers.upperCase) {
+            value = String(value).toUpperCase()
+          }
+          this.$emit('update:modelValue', value)
+        },
+      },
+      props: {
+        modelValue: String | Number,
+        modelModifiers: {
+          default: () => ({}),
+        },
+      },
+      mounted() {
+        console.log(this.modelModifiers)
+      },
+      template: `
+        <div>父组件使用 v-model.upperCase 传递的： {{modelValue}} </div>
+        <button @click="handleClick"> 点击我进行更改 </button>
+      `,
+    })
+
+    app.component('test3', {
+      methods: {
+        handleClick() {
+          let value = this.myName + 'w'
+          if (this.myNameModifiers.upperCase) {
+            value = String(value).toUpperCase()
+          }
+          this.$emit('update:myName', value)
+        },
+      },
+      props: {
+        myName: String | Number,
+        myNameModifiers: {
+          default: () => ({}),
+        },
+      },
+      mounted() {
+        console.log(this.myNameModifiers)
+      },
+      template: `
+        <div>父组件使用 v-model:myName.upperCase 传递的： {{myName}}</div>
+        <button @click="handleClick"> 点击我进行更改 </button>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
