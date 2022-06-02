@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>16-单向数据流</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 单项数据流的概念
+    const app = Vue.createApp({
+      data() {
+        return {
+          params: {
+            message: 'hello',
+            a: 123,
+            b: 456,
+            c: 789,
+          },
+        }
+      },
+      template: `
+        <div>
+          传递多个属性值时候可以用 v-bind
+          <test v-bind="params" />
+          <hr />
+          组件属性名字过长时候，用-连接，但是组件内部需要用驼峰法来接入
+          <test :data-msg="params.message" />
+          <hr />
+          单向数据流：
+          父组件可以向子组件进行传值，但是在子组件内容不能直接修改这个值，数据流是单向的
+          <hr />
+          把父组件传递的属性值转换为组件内部属性值的来进行处理
+          <br />
+          <test2 :data-msg="params.message" />
+          <hr /> 
+          prop 以原始的形式传入，但还需作转换，这里使用computed
+          <test3 :data-msg="params.message" />
+        </div>
+      `,
+    })
+    app.component('test', {
+      props: ['message', 'a', 'b', 'c', 'dataMsg'],
+      data() {
+        return {}
+      },
+      methods: {},
+      template: `
+        <div>
+          父组件传递的属性值 ：<br />
+          message: {{message}}<br />
+          a: {{a}} <br />
+          b: {{b}} <br />
+          c: {{c}} <br />
+          dataMsg: {{dataMsg}} <br />
+        </div>
+      `,
+    })
+    app.component('test2', {
+      props: ['dataMsg'],
+      data() {
+        return {
+          testMsg: this.dataMsg,
+        }
+      },
+      methods: {
+        handleClick() {
+          this.testMsg += 1
+        },
+      },
+      template: `
+        <div>
+          父组件传递的属性值 ：<br />
+          testMsg: {{testMsg}} <br />
+          <button @click="handleClick">点击改变testMsg</button>
+        </div>
+      `,
+    })
+    app.component('test3', {
+      props: ['dataMsg'],
+      computed: {
+        testMsg() {
+          return String(this.dataMsg).trim().toUpperCase()
+        },
+      },
+      template: `
+        <div>
+          父组件传递的属性值 ：<br />
+          testMsg: {{testMsg}} <br />
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
