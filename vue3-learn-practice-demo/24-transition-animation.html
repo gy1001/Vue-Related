@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>24-过渡和动画</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <style>
+    .animation {
+      animation: leftToRight 3s;
+    }
+    @keyframes leftToRight {
+      0% {
+        transform: translateX(-100px);
+      }
+      50% {
+        transform: translateX(-50px);
+      }
+      100% {
+        transform: translateX(0px);
+      }
+    }
+    .transition {
+      transition: 3s background-color ease;
+    }
+    .bgBlue {
+      background-color: blue;
+    }
+    .bgGreen {
+      background-color: green;
+    }
+  </style>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 过渡: 从一个状态过渡到另一个状态
+    // 动画：一个元素运动的情况
+    const app = Vue.createApp({
+      data() {
+        return {
+          animate: {
+            transition: true,
+            animation: true,
+            bgBlue: true,
+            bgGreen: false,
+          },
+          styleObj: {
+            backgroundColor: 'blue',
+          },
+        }
+      },
+      methods: {
+        handleClick() {
+          this.animate.animation = !this.animate.animation
+          this.animate.bgBlue = !this.animate.bgBlue
+          this.animate.bgGreen = !this.animate.bgGreen
+        },
+        handleStyleClick() {
+          if (this.styleObj.backgroundColor === 'blue') {
+            this.styleObj.backgroundColor = 'green'
+          } else {
+            this.styleObj.backgroundColor = 'blue'
+          }
+        },
+      },
+      mounted() {},
+      template: `
+        <div>
+          先用基本的 css 实现 过渡 和 动画 效果
+          <div :class="animate" style="">hello world</div>
+          <button @click="handleClick">切换</button>
+          <hr />
+          使用 style 样式
+          <div :style="styleObj">hello world</div>
+          <button @click="handleStyleClick">切换</button>
+
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
