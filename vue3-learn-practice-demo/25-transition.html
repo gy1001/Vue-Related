@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>25-使用 transition 标签实现单元素组件的过渡和动画效果</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <style>
+    @keyframes shake {
+      0% {
+        transform: translateX(-100px);
+      }
+      50% {
+        transform: translateX(-50px);
+      }
+      100% {
+        transform: translateX(50px);
+      }
+    }
+    .v-enter-from {
+      opacity: 0;
+      color: green;
+    }
+    .v-enter-active {
+      /* transition: opacity 3s ease-out; */
+      animation: shake 10s;
+      /* 增加过渡效果 */
+      transition: all 3s ease-in;
+    }
+    .v-enter-to {
+      opacity: 1;
+      color: green;
+    }
+    .v-leave-from {
+      opacity: 1;
+    }
+    .v-leave-active {
+      animation: shake 10s;
+      /* transition: opacity 3s ease-out; */
+      /* 增加过渡效果 */
+      transition: all 3s ease-in;
+    }
+    .v-leave-to {
+      opacity: 0;
+      color: red;
+    }
+
+    .hello-enter-from {
+      opacity: 0;
+    }
+    .hello-enter-active {
+      /* transition: opacity 3s ease-out; */
+      animation: shake 0.3s;
+    }
+    .hello-enter-to {
+      opacity: 1;
+    }
+    .hello-leave-from {
+      opacity: 1;
+    }
+    .hello-leave-active {
+      animation: shake 0.3s;
+      /* transition: opacity 3s ease-out; */
+    }
+    .hello-leave-to {
+      opacity: 0;
+    }
+    .mine-enter {
+      animation: shake 0.3s;
+    }
+    .mine-leave {
+      animation: shake 0.3s;
+    }
+  </style>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 单组件，单元素的出场入场动画
+    const app = Vue.createApp({
+      data() {
+        return {
+          show: false,
+        }
+      },
+      methods: {
+        handleClick() {
+          this.show = !this.show
+        },
+
+        handleBeforeEnter(el) {
+          el.style.color = 'red'
+        },
+
+        handleEnterActive(el, done) {
+          const animationTimer = setInterval(() => {
+            const color = el.style.color
+            if (color === 'red') {
+              el.style.color = 'green'
+            } else {
+              el.style.color = 'red'
+            }
+          }, 1000)
+
+          setTimeout(() => {
+            done() // 调用后动画结束，会触发相应的动画结束钩子函数
+            clearInterval(animationTimer)
+          }, 5000)
+        },
+
+        handleAfterEnter() {
+          console.log('动画执行结束')
+        },
+      },
+      template: `
+        <div>
+          初步使用 transition 实现 入场 和 出场动画
+          <br />
+          <transition>
+            <div v-if="show">hello world</div>
+          </transition>
+          <button @click="handleClick">切换</button>
+          <hr />
+          transition 也可以进行重命名
+          <br />
+          <transition name="hello">
+            <div v-if="show">hello world</div>
+          </transition>
+          <button @click="handleClick">切换</button>
+          <hr />
+          transition 还可以支持所有的出入场类名, 比如这里可以结合第三方的一些动画库配合使用
+          <transition
+            enter-active-class="mine-enter"
+            leave-active-class="mine-leave"
+          >
+            <div v-if="show">hello world</div>
+          </transition>
+          <br />
+          <button @click="handleClick">切换</button>
+          <hr />
+          恢复最开始的
+          <br />
+          支持 type 声明 animation / transition ，用于两者时间不一致时候，以哪一个时间为准
+          <br />
+          <transition type="transition"> 
+            <div v-show="show">hello world</div>
+          </transition>
+          <button @click="handleClick">切换</button>
+          <hr />
+          transition 也支持 duration属性，来声明动画时间，也支持对象 {enter:1000,leave:3000}
+          <br />
+          <transition duration="1000"> 
+            <div v-show="show">hello world</div>
+            </transition>
+            <button @click="handleClick">切换</button>
+          <hr />
+          transition 也支持 css:false 不执行动画
+          <br />
+          <transition :css="false"> 
+            <div v-show="show">hello world</div>
+          </transition>
+          <button @click="handleClick">切换</button>
+          <hr />
+          transition 也支持 钩子函数
+          <transition
+            :css="false"
+            @before-enter="handleBeforeEnter"
+            @enter="handleEnterActive"
+            @after-enter="handleAfterEnter"
+          > 
+            <div v-show="show">hello world</div>
+          </transition>
+          <br />
+          <button @click="handleClick">切换</button>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
