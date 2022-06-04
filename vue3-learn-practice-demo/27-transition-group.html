@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>27-列表动画</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <style>
+    .list-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .v-enter-from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .v-enter-active {
+      transition: all 0.3s ease-in;
+    }
+    .v-enter-to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+    /* 其他列表项目移动时候的动画 */
+    .v-move {
+      transition: all 0.5s ease-in;
+    }
+    /* 出场动画一样 */
+  </style>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 列表动画的实现
+    const app = Vue.createApp({
+      data() {
+        return {
+          list: [1, 2, 3],
+        }
+      },
+      methods: {
+        handleClick() {
+          this.list.unshift(this.list.length + 1)
+        },
+      },
+      template: `
+        <div>
+          <transition-group>
+            <span class="list-item" v-for="item in list" :key="item">{{item}}</span>
+          </transition-group>
+          <br />
+          <button @click="handleClick">增加</button>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
