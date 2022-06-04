@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>26-组件和元素切换动画的实现</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <style>
+    .v-enter-from {
+      opacity: 0;
+    }
+    .v-enter-active {
+      transition: all 2s ease-in;
+    }
+    .v-enter-to {
+      opacity: 1;
+    }
+    .v-leave-from {
+      opacity: 1;
+    }
+    .v-leave-active {
+      transition: all 2s ease-in;
+    }
+    .v-leave-to {
+      opacity: 0;
+    }
+  </style>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 多个多元素之间的切换
+    // 可以通过 appear attribute 设置节点在初始渲染的过渡
+    // Vue 提供了一个非常有用的工具，称之为过渡模式:
+    // in-out: 新元素先进行进入过渡，完成之后当前元素过渡离开。
+    // out-in: 当前元素先进行离开过渡，完成之后新元素过渡进入
+    // 多个单组件之间的切换
+    const componentA = {
+      template: '<div>hello i am componentA</div>',
+    }
+    const componentB = {
+      template: '<div>hello i am componentB</div>',
+    }
+    const app = Vue.createApp({
+      components: {
+        'component-a': componentA,
+        'component-b': componentB,
+      },
+      data() {
+        return {
+          show: true,
+          currentComponent: 'component-a',
+        }
+      },
+      methods: {
+        handleClick() {
+          this.show = !this.show
+          this.currentComponent =
+            this.currentComponent === 'component-a'
+              ? 'component-b'
+              : 'component-a'
+        },
+      },
+      template: `
+        <div>
+          多个多元素之间的切换
+          <br />
+          <transition mode="out-in" appear>
+            <div v-if="show">hello world</div>
+            <div v-else>bye world</div>
+          </transition>
+          <button @click="handleClick">切换</button>
+          <hr />
+          多个单组件之间的切换
+          <transition mode="out-in" appear>
+            <component-a v-if="show">hello world</component-a>
+            <component-b v-else>bye world</component-v>
+          </transition>
+          <br />
+          <button @click="handleClick">切换</button>
+          <hr />
+          多个组件之间的切换也支持 component 动态组件的写法
+          <transition mode="out-in" appear>
+            <component :is="currentComponent"></component>
+          </transition>
+          <br />
+          <button @click="handleClick">切换</button>
+
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
