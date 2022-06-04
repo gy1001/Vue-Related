@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>28-状态动画</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 状态动画
+    const app = Vue.createApp({
+      data() {
+        return {
+          number: 0,
+          animateNumber: 1,
+        }
+      },
+      methods: {
+        handleClick() {
+          this.number += 10
+          if (this.animateNumber < this.number) {
+            const timer = setInterval(() => {
+              this.animateNumber += 1
+              if (this.animateNumber === this.number) {
+                clearInterval(timer)
+              }
+            }, 100)
+          }
+        },
+      },
+      template: `
+        <div>
+          <span>{{animateNumber}}</span>
+          <br />
+          <button @click="handleClick">增加</button>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
