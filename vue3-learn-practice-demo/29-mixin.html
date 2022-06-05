@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>29-Mixin 混入的基础语法</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // mixin 混入
+    // 组件data 优先级高于 mixin data 优先级
+    // 生命周期函数：先执行 mixin 里面的，在执行组件内的
+    // 自定义属性例如methods中的方法：组件种的属性优先级高于mixin属性的优先级
+    // mixin 也分为局部的 mixin 和 全局的 mixin
+    const myMixin = {
+      data() {
+        return {
+          number: 2,
+          count: 22,
+        }
+      },
+      created() {
+        console.log('created')
+      },
+      methods: {
+        handleClick() {
+          console.log('mixin handleClick')
+        },
+      },
+    }
+    const app = Vue.createApp({
+      mixins: [myMixin],
+      custom: 'hello!',
+      data() {
+        return {
+          number: 1,
+        }
+      },
+      created() {
+        console.log('i am created')
+      },
+      methods: {
+        handleClick() {
+          console.log('handleClick')
+        },
+      },
+      template: `
+        <div>
+          <span>{{number}}</span>
+          <br />
+          <span>{{count}}</span>
+          <br />
+          <button @click="handleClick">增加</button>
+        </div>
+      `,
+    })
+    // 可以通过设置进行 mixin 的优先级的设置
+    // 为自定义选项定义合并策略。
+    app.config.optionMergeStrategies.custom = (mixinVal, appValue) => {
+      console.log(mixinVal, appValue)
+      return mixinVal || appValue
+    }
+    // 定义全局 mixin
+    app.mixin({
+      custom: 'i am mixin custom',
+      data() {
+        return {
+          number: 3333,
+        }
+      },
+      created() {
+        console.log('i am global mixin')
+      },
+      methods: {
+        handleClick() {
+          console.log('i am global methods handleClick')
+        },
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
