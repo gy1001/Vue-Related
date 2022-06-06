@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>31-teleport传送门</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <style>
+    .area {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background-color: green;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .mask {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #000;
+      opacity: 0.5;
+    }
+  </style>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          show: false,
+        }
+      },
+      methods: {
+        handleBtnClick() {
+          this.show = !this.show
+        },
+      },
+      template: `
+        <div class="area">
+          <button @click="handleBtnClick">按钮</button>
+          <teleport to="body">
+            <div class="mask" v-show="show">我是蒙层</div>
+          </teleport>
+        </div>
+      `,
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
