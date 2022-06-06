@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>33-插件的定义和使用</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // plugin 插件
+    const myPlugin = {
+      install(app, options) {
+        console.log(app, options)
+        app.provide('name', '孙悟空')
+        app.directive('focus', {
+          mounted(el) {
+            el.focus()
+          },
+        })
+        // ... 还可以支持其他的app配置
+        app.config.globalProperties.$sayHello = 'hello world'
+      },
+    }
+    const app = Vue.createApp({
+      inject: ['name'],
+      mounted() {
+        console.log(this.$sayHello)
+      },
+      template: `
+        <my-title>{{name}}--{{$sayHello}}</my-title>
+      `,
+    })
+    app.component('my-title', {
+      data() {
+        return {
+          message: 'hello world',
+        }
+      },
+      template: `
+        <div>
+          {{message}}-<slot></slot>
+          <input v-focus />
+        </div>
+      `,
+    })
+    // 使用插件
+    app.use(myPlugin, {})
+    const vm = app.mount('#root')
+  </script>
+</html>
