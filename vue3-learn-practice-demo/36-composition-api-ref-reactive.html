@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>36-ref-reactive 响应式引用的用法和原理</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    // ref reactive 响应式的引用
+    // 原理： 通过 Proxy 对数据进行封装，当数据变化时，触发模板等内容的更新
+    const { ref, reactive, readonly } = Vue
+    const app = Vue.createApp({
+      template: `
+        <div> name: {{name}},
+          ageObj:{{ageObj}},
+          copyAgeObj:{{copyAgeObj}},
+        </div>
+      `,
+      // created 实例被完全初始化之前
+      setup(props, context) {
+        console.log('setup')
+        let name = ref('孙悟空')
+        let ageObj = reactive({})
+        const copyAgeObj = readonly({
+          ageValue: '300',
+        })
+        setTimeout(() => {
+          name.value = '猪八戒'
+          ageObj.age = 500
+          copyAgeObj.ageValue = 400 // 这里不会更改，会报警告，因为只读
+        }, 3000)
+        return {
+          name,
+          ageObj: ageObj,
+          copyAgeObj,
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
