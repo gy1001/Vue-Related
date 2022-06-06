@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>37-toRef 以及 context 参数</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    // toRef context
+    const { ref, reactive, readonly, toRefs, toRef, h } = Vue
+    const app = Vue.createApp({
+      methods: {
+        handleChange(params) {
+          console.log(params, 'handleChange')
+        },
+      },
+      template: `
+        <div>
+          {{name}}:{{age}}
+          <child app="app">
+            121212
+          </child>
+          <child2 app="app" @change="handleChange">
+            121212
+          </child2>
+        </div>
+      `,
+      // created 实例被完全初始化之前
+      setup(props, context) {
+        const { attrs, slots, emit } = context
+        let data = reactive({ name: '孙悟空' })
+        const { name } = toRefs(data)
+        const age = toRef(data, 'age')
+        setTimeout(() => {
+          data.name = '猪八戒'
+          age.value = 500
+        }, 3000)
+        return {
+          name,
+          age,
+        }
+      },
+    })
+    app.component('child', {
+      // props: ['app'],
+      // template: `<div>child</div>`,
+      setup(props, context) {
+        const { attrs, slots, emit } = context
+        // attrs 是 None-props 属性集合
+        console.log(slots.default())
+        // return {}
+        return () => h('div', {}, [slots.default()])
+      },
+    })
+    app.component('child2', {
+      props: ['app'],
+      template: `<div @click="handleClick">child2</div>`,
+      setup(props, context) {
+        const { attrs, slots, emit } = context
+        const handleClick = () => {
+          console.log(222)
+          emit('change', 333)
+        }
+        return {
+          handleClick,
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
