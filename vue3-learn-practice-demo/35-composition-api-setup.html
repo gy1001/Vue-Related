@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>35-composition-api-setup</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          name: 'hello world',
+          age: 23,
+        }
+      },
+      template: `
+        <div @click="handleClick"> name: {{name}}, age: {{age}}</div>
+      `,
+      // created 实例被完全初始化之前
+      setup(props, context) {
+        console.log('setup')
+        return {
+          name: '孙悟空',
+          age: 500,
+          handleClick: () => {
+            console.log(122)
+          },
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
