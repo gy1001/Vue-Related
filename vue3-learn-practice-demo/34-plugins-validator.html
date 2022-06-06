@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>34-数据校验插件开发实例</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root">我是初始化内容</div>
+  </body>
+  <script>
+    // 对数据做校验的插件
+    const app = Vue.createApp({
+      data() {
+        return {
+          name: 'hello world',
+          age: 23,
+        }
+      },
+      rules: {
+        age: {
+          validate: (value) => {
+            return value > 25
+          },
+          message: 'too young, too simple',
+        },
+      },
+      template: `
+        <div> name: {{name}}, age: {{age}}</div>
+      `,
+    })
+
+    // 这是mixin 写法实现，也可以通过插件来实现
+    // app.mixin({
+    //   created() {
+    //     console.log('mixin ready')
+    //     for (const key in this.$options.rules) {
+    //       if (Object.hasOwnProperty.call(this.$options.rules, key)) {
+    //         const item = this.$options.rules[key]
+    //         console.log(key, item)
+    //         this.$watch(key, (newValue) => {
+    //           const result = item.validate(newValue)
+    //           if (!result) {
+    //             console.log(item.message)
+    //           }
+    //         })
+    //       }
+    //     }
+    //   },
+    // })
+    // 插件写法
+    const validatorPlugin = (app, options) => {
+      app.mixin({
+        created() {
+          console.log('mixin ready')
+          for (const key in this.$options.rules) {
+            if (Object.hasOwnProperty.call(this.$options.rules, key)) {
+              const item = this.$options.rules[key]
+              console.log(key, item)
+              this.$watch(key, (newValue) => {
+                const result = item.validate(newValue)
+                if (!result) {
+                  console.log(item.message)
+                }
+              })
+            }
+          }
+        },
+      })
+    }
+    app.use(validatorPlugin)
+    const vm = app.mount('#root')
+  </script>
+</html>
