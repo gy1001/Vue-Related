@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>39-computed方法生成计算属性</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    const { ref, reactive, computed, onMounted } = Vue
+
+    const app = Vue.createApp({
+      template: `
+        <div>
+          <span @click="handleClick">
+            {{count}}--{{countAddFive}}
+          </span>
+        </div>
+      `,
+      setup() {
+        let count = ref(0)
+        const handleClick = () => {
+          count.value += 1
+        }
+        // const countAddFive = computed(() => {
+        //   return count.value + 5
+        // })
+        // computed 也支持 get set 写法调用 注意这里看源码得知： 如果传入是 function 说明是只读 computed
+        const countAddFive = computed({
+          get: () => {
+            return count.value + 5
+          },
+          set: (val) => {
+            console.log(111, val)
+            count.value = 10
+          },
+        })
+        setTimeout(() => {
+          countAddFive.value = 100 // 此时会调用 set 逻辑
+        }, 3000)
+        return {
+          count,
+          handleClick,
+          countAddFive,
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
