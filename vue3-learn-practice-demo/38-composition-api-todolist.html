@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>38-使用 Composition API 开发TodoList</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    const { ref, reactive } = Vue
+    // 关于 list 操作的内容进行封装
+    const listRelativeEffect = () => {
+      const list = reactive([])
+      const addItem = (item) => {
+        list.push(item)
+      }
+      return {
+        list,
+        addItem,
+      }
+    }
+
+    // 关于 inputValue 操作的内容进行封装
+    const inputRelativeEffect = () => {
+      const inputValue = ref('')
+      const handleInputChange = (e) => {
+        inputValue.value = e.target.value
+      }
+      return { inputValue, handleInputChange }
+    }
+
+    // composition API Todo List
+    const app = Vue.createApp({
+      template: `
+        <div>
+          <input :value="inputValue" @change="inputChange" placeholder="请输入" />
+          <button @click="handleClick">提交</button>
+          <ul>
+            <li v-for="(item,index) in list">{{index}}:{{item}}</li>
+          </ul>
+        </div>
+      `,
+      setup() {
+        const { list, addItem } = listRelativeEffect()
+        const { inputValue, handleInputChange } = inputRelativeEffect()
+
+        return {
+          inputValue,
+          handleClick: () => addItem(inputValue),
+          inputChange: handleInputChange,
+          list,
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
