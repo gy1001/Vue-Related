@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>40-watch 和 watchEffect 的使用和差异性</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    // watch  侦听器
+    // watchEffect 侦听器，偏向于 effect
+    const { ref, reactive, computed, watch, watchEffect } = Vue
+    const app = Vue.createApp({
+      template: `
+        <div>
+          <div>
+            Name: <input v-model="name" />
+          </div>
+           <div>
+            Name is {{name}}
+          </div>
+          <div>
+            <div>
+              nameObj.name: <input v-model="nameObj.name" />
+              nameObj.age: <input v-model="nameObj.age" />
+            </div>
+            Name is {{nameObj.name}}
+            age is {{nameObj.age}}
+          </div>
+        </div>
+      `,
+      setup() {
+        const name = ref('')
+        const nameObj = reactive({ name: '孙悟空', age: 500 })
+        //  watch 可以监听 ref 类型数据，也可以是 reactive 数据。还可以是由以上类型的值组成的数组
+        watch(name, (newValue, oldValue) => {
+          console.log(newValue, oldValue)
+        })
+        watch(nameObj, (newValue, oldValue) => {
+          console.log(newValue, oldValue)
+        })
+        watch(
+          () => nameObj.name,
+          (newValue, oldValue) => {
+            console.log(newValue, oldValue)
+          }
+        )
+        watch([() => nameObj.name, () => nameObj.age], (newValue, oldValue) => {
+          console.log(newValue, oldValue)
+        })
+        // 立即执行，没有惰性，同时响应式地追踪其依赖，并在依赖更改时重新执行。
+        // 不需要传递你要侦听的内容，自动感知依赖
+        // 不需要传递很多参数，只需要传递一个回调函数即可
+        // 不过不能获取之前数据的值
+        const stopper = watchEffect(() => {
+          console.log(nameObj.name, nameObj.age)
+          setTimeout(() => {
+            stopper() // 停止侦听器
+          }, 5000)
+        })
+        return {
+          name,
+          nameObj,
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
