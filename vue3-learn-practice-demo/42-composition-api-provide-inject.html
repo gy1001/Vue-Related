@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>42-Provide,Inject,模版 Ref 的用法</title>
+    <script src="./vue3.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    const { ref, provide, inject, readonly, onMounted } = Vue
+    const app = Vue.createApp({
+      template: `
+        <div @click="handleClick">
+          {{name}}
+          <child></child>
+          <hr />
+          dom ref: composition Api 语法下，获取真实的DOM
+          <div>
+            <hello-test />
+          </div>
+        </div>
+      `,
+      setup() {
+        const name = ref('')
+        const provideName = ref('猪八戒')
+        // 此处readonly 是为了防止 子组件中直接改变 provide 的值，这样导致数据不是单向变化的，容易导致混乱
+        provide('name', readonly(provideName))
+        provide('changeName', (value) => {
+          provideName.value = '猪八戒变身'
+        })
+        const handleClick = () => {
+          name.value = '孙悟空'
+        }
+        return {
+          name,
+          handleClick,
+        }
+      },
+    })
+    app.component('child', {
+      setup() {
+        const name = inject('name', '我是默认值') // 第二个参数为设置默认值
+        const changeName = inject('changeName')
+        const handleClick = () => {
+          console.log('handleClick')
+          changeName('变')
+        }
+        return {
+          name,
+          handleClick,
+        }
+      },
+      template: '<div @click="handleClick">child--{{name}}</div>',
+    })
+    app.component('hello-test', {
+      setup() {
+        const helloRef = ref(null)
+        onMounted(() => {
+          console.log(helloRef.value)
+        })
+        return {
+          helloRef,
+        }
+      },
+      template: '<div ref="helloRef">hello-test</div>',
+    })
+    const vm = app.mount('#root')
+  </script>
+</html>
