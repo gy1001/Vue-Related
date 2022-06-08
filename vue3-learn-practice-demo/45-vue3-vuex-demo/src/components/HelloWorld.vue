@@ -9,6 +9,7 @@
 <script>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import axios from 'axios'
 export default {
   name: 'HelloWorld',
   props: {
@@ -20,6 +21,7 @@ export default {
     const myName = computed(() => {
       return store.state.name
     })
+    axios.get('')
     const handleClick = () => {
       // 想改变数据，vuex要求第一步，必须派发一个action
       store.dispatch('change', '齐天大圣') // 这里如果不涉及到 异步操作，了可以直接进行 this.$store.commit("change")
