@@ -1,22 +1,7 @@
 <template>
   <div class="wrapper">
-    <div class="position">
-      <span class="position__icon iconfont">&#xe636;</span>
-      山西理工大学国防科技园2号楼10层 北京北京北京北京北京北京
-      <span class="position__notice iconfont">&#xe63d;</span>
-    </div>
-    <div class="searchbar">
-      <div class="searchbar-icon">
-        <span class="iconfont">&#xe60c;</span>
-      </div>
-      <input type="search" placeholder="山姆会员商店优惠商品" />
-    </div>
-    <div class="banner">
-      <img
-        class="banner__img"
-        src="http://www.dell-lee.com/imgs/vue3/banner.jpg"
-      />
-    </div>
+    <HomeHeader />
+    <BannerItem />
     <div class="icons">
       <div class="icons__item" v-for="item in navList" :key="item.desc">
         <img
@@ -28,45 +13,24 @@
       </div>
     </div>
     <div class="border-line"></div>
-    <div class="near-shop">
-      <div class="shop-list">
-        <div class="shop-list-title">附件店铺</div>
-        <router-link
-          v-for="item in nearShopList"
-          :to="`/shop/${item._id}`"
-          :key="item._id"
-        >
-          <ShopInfo :item="item"
-        /></router-link>
-      </div>
-    </div>
+    <NearShop />
   </div>
   <TabBar />
 </template>
 
 <script>
-import { defineComponent, reactive, ref } from 'vue'
-import { get } from '@/utils/requests'
-import ShopInfo from '@/components/ShopInfo'
+import { defineComponent, reactive } from 'vue'
 import TabBar from '@/components/TabBar.vue'
+import BannerItem from './BannerItem.vue'
+import HomeHeader from './HomeHeader.vue'
+import NearShop from './NearShop.vue'
 
-// 处理获取附近店铺数据的逻辑
-const useNearShopListEffect = () => {
-  const nearShopList = ref([])
-  const getNearShopList = async () => {
-    const result = await get('/api/shop/hot-list')
-    // const result = await get("/api/nearShopInfo")
-    if (result?.errno === 0 && result?.data?.length) {
-      console.log(nearShopList)
-      nearShopList.value = result.data
-    }
-  }
-  return { getNearShopList, nearShopList }
-}
 export default defineComponent({
   components: {
-    ShopInfo: ShopInfo,
-    TabBar: TabBar
+    TabBar: TabBar,
+    BannerItem: BannerItem,
+    HomeHeader: HomeHeader,
+    NearShop: NearShop
   },
   setup() {
     const navList = reactive([
@@ -81,16 +45,13 @@ export default defineComponent({
       { imgName: '大牌免运', desc: '大牌免运' },
       { imgName: '红包', desc: '红包套餐' }
     ])
-    const { getNearShopList, nearShopList } = useNearShopListEffect()
-    getNearShopList()
-    return { navList, nearShopList }
+    return { navList }
   }
 })
 </script>
 
 <style lang="scss" scoped>
 @import '../../style/variable.scss';
-@import '../../style/mixins.scss';
 .wrapper {
   position: absolute;
   left: 0;
@@ -98,56 +59,6 @@ export default defineComponent({
   bottom: 0.49rem;
   right: 0;
   padding: 0 0.18rem;
-  .position {
-    @include ellipse;
-    padding: 0.16rem 0;
-    line-height: 0.22rem;
-    font-size: 0.16rem;
-    position: relative;
-    padding-right: 0.24rem;
-    color: $content-fontColor;
-    &__icon {
-      top: 1rem;
-      margin-right: 0.08rem;
-    }
-    &__notice {
-      position: absolute;
-      font-size: 0.2rem;
-      top: 0.17rem;
-      right: 0;
-    }
-  }
-}
-.searchbar {
-  display: flex;
-  border-radius: 0.16rem;
-  height: 0.32rem;
-  background: rgba($color: #272727, $alpha: 0.1);
-  color: #b7b7b7;
-  overflow: hidden;
-  input {
-    width: 100%;
-    height: 100%;
-    font-size: 0.14rem;
-    line-height: 0.16rem;
-    border: 0rem;
-    outline: none;
-    background: rgba($color: #272727, $alpha: 0.05);
-  }
-  &-icon {
-    line-height: 0.32rem;
-    margin: 0rem 0.07rem;
-  }
-}
-.banner {
-  margin-top: 0.12rem;
-  height: 0;
-  overflow: hidden;
-  padding-bottom: 25.4%; // 放置图片加载过程导致的页面抖动
-  &__img {
-    width: 100%;
-    border-bottom: 25%;
-  }
 }
 .icons {
   display: flex;
@@ -175,19 +86,5 @@ export default defineComponent({
   margin: 0 -0.18rem;
   height: 0.1rem;
   background: $content-bgColor;
-}
-.near-shop {
-  .shop-list {
-    margin-bottom: 49px;
-    &-title {
-      font-size: 18px;
-      font-weight: bold;
-      line-height: 25px;
-      margin: 16px 0 2px 0;
-    }
-    a {
-      text-decoration: none;
-    }
-  }
 }
 </style>
