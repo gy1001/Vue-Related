@@ -5,6 +5,19 @@
       山西理工大学国防科技园2号楼10层 北京北京北京北京北京北京
       <span class="position__notice iconfont">&#xe63d;</span>
     </div>
+    <div class="searchbar">
+      <div class="searchbar-icon">
+        <span class="iconfont">&#xe60c;</span>
+      </div>
+      <input type="search" placeholder="山姆会员商店优惠商品" />
+    </div>
+    <div class="banner">
+      <img
+        class="banner__img"
+        src="http://www.dell-lee.com/imgs/vue3/banner.jpg"
+      />
+    </div>
+    <span>122</span>
   </div>
   <div class="docker">
     <!-- BEM 命名规则
@@ -62,6 +75,37 @@
       top: 0.17rem;
       right: 0;
     }
+  }
+}
+.searchbar {
+  display: flex;
+  border-radius: 0.16rem;
+  height: 0.32rem;
+  background: rgba($color: #272727, $alpha: 0.1);
+  color: #b7b7b7;
+  overflow: hidden;
+  input {
+    width: 100%;
+    height: 100%;
+    font-size: 0.14rem;
+    line-height: 0.16rem;
+    border: 0rem;
+    outline: none;
+    background: rgba($color: #272727, $alpha: 0.05);
+  }
+  &-icon {
+    line-height: 0.32rem;
+    margin: 0rem 0.07rem;
+  }
+}
+.banner {
+  margin-top: 0.12rem;
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 25.4%; // 放置图片加载过程导致的页面抖动
+  &__img {
+    width: 100%;
+    border-bottom: 25%;
   }
 }
 .docker {
