@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="wraper">
     <div class="login">
       <img
@@ -14,19 +14,41 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { post } from '@/utils/requests'
 export default {
   name: 'jd-login',
   setup() {
     const router = useRouter()
-    const loginSubmit = () => {
-      localStorage.isLogin = true
-      router.push({ path: '/' })
+    const password = ref('')
+    const mobile = ref('')
+    const loginSubmit = async () => {
+      if (!mobile.value || !password.value) {
+        console.log('用户名密码必填')
+        return
+      }
+      try {
+        const result = await post('/api/user/login', {
+          username: mobile.value,
+          password: password.value
+        })
+        if (result?.errno === 0) {
+          localStorage.isLogin = true
+          router.push({ path: '/' })
+        } else {
+          console.log('登录失败')
+          // showToast('登录失败')
+        }
+      } catch (e) {
+        console.log('请求失败')
+        // showToast('请求失败')
+      }
     }
     const toRegister = () => {
       router.push({ name: 'register' })
     }
-    return { loginSubmit, toRegister, mobile: '', password: '' }
+    return { loginSubmit, toRegister, mobile: mobile, password: password }
   }
 }
 </script>
