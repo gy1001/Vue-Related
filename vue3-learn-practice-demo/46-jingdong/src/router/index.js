@@ -17,7 +17,17 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () =>
-      import(/* webpackChunkName: "shop" */ '../views/login/Login.vue'),
+      import(/* webpackChunkName: "user" */ '../views/login/Login.vue'),
+    beforeEnter: (to, from, next) => {
+      const { isLogin } = localStorage
+      isLogin ? next({ path: '/' }) : next()
+    }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/login/Register.vue'),
     beforeEnter: (to, from, next) => {
       const { isLogin } = localStorage
       isLogin ? next({ path: '/' }) : next()
