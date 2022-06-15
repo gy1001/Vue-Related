@@ -10,6 +10,7 @@
       <div class="login-btn" @click="loginSubmit">登录</div>
       <div class="login-link" @click="toRegister">立即注册</div>
     </div>
+    <Toast v-if="isShowToast" :message="toastMessage" />
   </div>
 </template>
 
@@ -17,15 +18,20 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { post } from '@/utils/requests'
+import Toast, { useToastEffect } from '../../components/showToast.vue'
 export default {
   name: 'jd-login',
+  components: {
+    Toast
+  },
   setup() {
     const router = useRouter()
     const password = ref('')
     const mobile = ref('')
+    const { isShowToast, toastMessage, showToast } = useToastEffect()
     const loginSubmit = async () => {
       if (!mobile.value || !password.value) {
-        console.log('用户名密码必填')
+        showToast('用户名密码必填')
         return
       }
       try {
@@ -38,17 +44,24 @@ export default {
           router.push({ path: '/' })
         } else {
           console.log('登录失败')
-          // showToast('登录失败')
+          showToast('登录失败')
         }
       } catch (e) {
         console.log('请求失败')
-        // showToast('请求失败')
+        showToast('请求失败')
       }
     }
     const toRegister = () => {
       router.push({ name: 'register' })
     }
-    return { loginSubmit, toRegister, mobile: mobile, password: password }
+    return {
+      isShowToast,
+      toastMessage,
+      loginSubmit,
+      toRegister,
+      mobile: mobile,
+      password: password
+    }
   }
 }
 </script>
