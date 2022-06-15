@@ -7,20 +7,23 @@
       />
       <input type="number" placeholder="请输入手机号" v-model="mobile" />
       <input type="password" placeholder="请输入密码" v-model="password" />
-      <div class="login-btn">登录</div>
+      <div class="login-btn" @click="loginSubmit">登录</div>
       <div class="login-link">立即注册</div>
     </div>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
   name: 'jd-login',
   setup() {
-    return {
-      mobile: '',
-      password: ''
+    const router = useRouter()
+    const loginSubmit = () => {
+      localStorage.isLogin = true
+      router.push({ path: '/' })
     }
+    return { loginSubmit, mobile: '', password: '' }
   }
 }
 </script>

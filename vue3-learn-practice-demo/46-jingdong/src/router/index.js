@@ -17,13 +17,23 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () =>
-      import(/* webpackChunkName: "shop" */ '../views/login/Login.vue')
+      import(/* webpackChunkName: "shop" */ '../views/login/Login.vue'),
+    beforeEnter: (to, from, next) => {
+      const { isLogin } = localStorage
+      isLogin ? next({ path: '/' }) : next()
+    }
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+router.beforeEach((to, from, next) => {
+  const { isLogin } = localStorage
+  isLogin || to.name === 'login' || to.name === 'register'
+    ? next()
+    : next({ name: 'login' })
 })
 
 export default router
