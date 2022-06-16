@@ -43,7 +43,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, reactive, watchEffect, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
+import { get } from '../../utils/requests'
 // tab列表
 const tabList = [
   { id: 1, name: '全部商品', tab: 'all' },
@@ -58,81 +60,39 @@ const useTagEffect = () => {
   }
   return { currentTab, handleTabClick }
 }
-
+// 获取商品列表
+const useShopListEffect = (currentTab, shopId) => {
+  const data = reactive({ goodsList: [] })
+  // 获取商品列表
+  const getGoodsList = async () => {
+    const result = await get(`/api/shop/${shopId}/products`, {
+      tab: currentTab.value
+    })
+    console.log(
+      '🚀 ~ file: Content.vue ~ line 100 ~ getGoodsList ~ result',
+      result
+    )
+    if (result.errno === 0 && result.data.length) {
+      data.goodsList = result.data
+    }
+  }
+  watchEffect(() => getGoodsList())
+  const { goodsList } = toRefs(data)
+  return { goodsList }
+}
 export default {
   name: 'shop-content',
   setup() {
+    // route获取商店ID
+    const route = useRoute()
+    const shopId = route.params.id
     const { currentTab, handleTabClick } = useTagEffect()
+    const { goodsList } = useShopListEffect(currentTab, shopId)
     return {
       tabList,
       currentTab,
       handleTabClick,
-      goodsList: [
-        {
-          id: '1',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '2',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '3',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '4',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '5',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '6',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '7',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        },
-        {
-          id: '8',
-          imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-          name: '名字',
-          sales: '12002',
-          price: '1000',
-          oldPrice: 200
-        }
-      ]
+      goodsList: goodsList
     }
   }
 }
