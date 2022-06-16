@@ -13,6 +13,7 @@
     <div class="shop-info">
       <ShopInfo :item="item" :hideBorder="true" />
     </div>
+    <ShopContent />
   </div>
 </template>
 
@@ -21,6 +22,7 @@ import { reactive, toRefs } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import ShopInfo from '@/components/ShopInfo.vue'
 import { get } from '@/utils/requests'
+import ShopContent from './ShopContent.vue'
 
 // 处理获取商店信息逻辑
 const uesShopInfoEffect = () => {
@@ -48,7 +50,8 @@ const useBackRouterEffect = () => {
 export default {
   name: 'shop-detail',
   components: {
-    ShopInfo
+    ShopInfo,
+    ShopContent
   },
   setup() {
     const { handleBackClick } = useBackRouterEffect()
