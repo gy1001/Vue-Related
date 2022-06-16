@@ -17,20 +17,43 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, toRefs } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import ShopInfo from '@/components/ShopInfo.vue'
+import { get } from '@/utils/requests'
+
+// 处理获取商店信息逻辑
+const uesShopInfoEffect = () => {
+  // route可以获取路由中的数据
+  const route = useRoute()
+  const data = reactive({ item: {} })
+  const getShopInfo = async () => {
+    const result = await get(`/api/shop/${route.params.id}`) // 通过route获取id
+    if (result?.errno === 0 && result.data) {
+      data.item = result.data
+    }
+  }
+  const { item } = toRefs(data)
+  return { item, getShopInfo }
+}
+// 返回主页逻辑
+const useBackRouterEffect = () => {
+  const router = useRouter()
+  const handleBackClick = () => {
+    router.push({ name: 'Home' })
+  }
+  return { handleBackClick }
+}
+
 export default {
   name: 'shop-detail',
   components: {
     ShopInfo
   },
   setup() {
-    const router = useRouter()
-    const handleBackClick = () => {
-      router.back()
-    }
-    const item = ref({ name: '店铺名' })
+    const { handleBackClick } = useBackRouterEffect()
+    const { item, getShopInfo } = uesShopInfoEffect()
+    getShopInfo()
     return {
       item,
       handleBackClick
