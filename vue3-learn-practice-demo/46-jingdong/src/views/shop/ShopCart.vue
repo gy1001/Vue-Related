@@ -20,19 +20,20 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router'
+import { useCartEffect } from '../../effects/CartEffect'
 export default {
   name: 'shop-cart',
   setup() {
+    const route = useRoute()
+    const shopId = route.params.id
     const handleSettlement = () => {}
     const showShopCart = () => {}
+    const { calculations } = useCartEffect(shopId)
     return {
       handleSettlement,
       showShopCart,
-      calculations: {
-        count: 22,
-        cartStatus: true,
-        price: 100
-      }
+      calculations
     }
   }
 }

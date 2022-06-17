@@ -32,10 +32,23 @@
           </div>
         </div>
         <div class="product-count">
-          <span class="product-count-mius iconfont"> &#xe60b; </span>
+          <span
+            class="product-count-mius iconfont"
+            @click="changeCartItemInfo(shopId, item._id, item, -1, shopName)"
+            v-if="cartList?.[shopId]?.productList?.[item._id]?.count"
+          >
+            &#xe60b;
+          </span>
           <!-- 显示的是购物车的商品数量 -->
-          <span class="product-count-number">2 </span>
-          <span class="product-count-plus iconfont"> &#xe61e; </span>
+          <span class="product-count-number">
+            {{ cartList?.[shopId]?.productList?.[item._id]?.count }}
+          </span>
+          <span
+            class="product-count-plus iconfont"
+            @click="changeCartItemInfo(shopId, item._id, item, 1, shopName)"
+          >
+            &#xe61e;
+          </span>
         </div>
       </div>
     </div>
@@ -45,7 +58,8 @@
 <script>
 import { ref, reactive, watchEffect, toRefs } from 'vue'
 import { useRoute } from 'vue-router'
-import { get } from '../../utils/requests'
+import { get } from '@/utils/requests'
+import { useCartEffect } from '../../effects/CartEffect'
 // tab列表
 const tabList = [
   { id: 1, name: '全部商品', tab: 'all' },
@@ -82,17 +96,22 @@ const useShopListEffect = (currentTab, shopId) => {
 }
 export default {
   name: 'shop-content',
+  props: ['shopName'],
   setup() {
     // route获取商店ID
     const route = useRoute()
     const shopId = route.params.id
     const { currentTab, handleTabClick } = useTagEffect()
     const { goodsList } = useShopListEffect(currentTab, shopId)
+    const { changeCartItemInfo, cartList } = useCartEffect()
     return {
+      shopId,
       tabList,
       currentTab,
       handleTabClick,
-      goodsList: goodsList
+      goodsList: goodsList,
+      changeCartItemInfo,
+      cartList
     }
   }
 }
@@ -130,6 +149,9 @@ export default {
     flex: 1;
     margin: 0 10px 0 16px;
     overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     &-item {
       position: relative;
       display: flex;

@@ -13,7 +13,7 @@
     <div class="shop-info">
       <ShopInfo :item="item" :hideBorder="true" />
     </div>
-    <ShopContent />
+    <ShopContent :shopName="item.name" />
     <ShopCart />
   </div>
 </template>
@@ -44,7 +44,7 @@ const uesShopInfoEffect = () => {
 const useBackRouterEffect = () => {
   const router = useRouter()
   const handleBackClick = () => {
-    router.push({ name: 'Home' })
+    router.back()
   }
   return { handleBackClick }
 }
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../style/variable.scss';
+@import '@/style/variable.scss';
 // 头部样式
 .header {
   margin: 16px 18px;

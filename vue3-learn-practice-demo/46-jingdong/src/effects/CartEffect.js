@@ -46,7 +46,12 @@ export const useCartEffect = shopId => {
         }
       }
     }
-    return { count, price: price.toFixed(1), isCheckedAll, cartStatus }
+    return {
+      count: Number(count),
+      price: price.toFixed(1),
+      isCheckedAll,
+      cartStatus
+    }
   })
 
   // 商品列表
