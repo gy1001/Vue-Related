@@ -7,10 +7,13 @@
           <span
             class="product-header-icon iconfont"
             v-html="calculations.isCheckedAll ? '&#xe77b;' : '&#xe670;'"
+            @click="changeCartProductsChecked(calculations.isCheckedAll)"
           ></span>
           全选
         </div>
-        <div class="product-header-Empty">清空购物车</div>
+        <div class="product-header-Empty" @click="clearCartProducts">
+          清空购物车
+        </div>
       </div>
       <!-- 商品列表-->
       <template v-for="item in productList" :key="item.id">
@@ -18,6 +21,7 @@
           <div
             class="product-item-checked iconfont"
             v-html="item.checked ? '&#xe77b;' : '&#xe670;'"
+            @click="changeCartItemChecked(item._id)"
           ></div>
           <img class="product-item-img" :src="item.imgUrl" />
           <div class="product-details">
@@ -63,11 +67,32 @@
 <script>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import { useCartEffect } from '../../effects/CartEffect'
+
+const useShopCartInfoEffect = () => {
+  const store = useStore()
+  // 清空购物车
+  const clearCartProducts = shopId => {
+    store.commit('clearCartProducts', { shopId })
+  }
+  const changeCartProductsChecked = (shopId, isCheckedAll) => {
+    store.commit('changeCartProductsChecked', {
+      shopId,
+      isCheckedAll: !isCheckedAll
+    })
+  }
+  return {
+    clearCartProducts,
+    changeCartProductsChecked
+  }
+}
+
 export default {
   name: 'shop-cart',
   setup() {
     const route = useRoute()
+    const store = useStore()
     const shopId = route.params.id
     const isShow = ref(false)
     const handleSettlement = () => {}
@@ -75,12 +100,23 @@ export default {
     const showShopCart = () => {
       isShow.value = !isShow.value
     }
+    // 商品选中
+    const changeCartItemChecked = productId => {
+      // 提交changeCartItemChecked事件 可以同步修改store的数据
+      store.commit('changeCartItemChecked', { shopId, productId })
+    }
+    const { clearCartProducts, changeCartProductsChecked } =
+      useShopCartInfoEffect()
     return {
       handleSettlement,
       showShopCart,
       calculations,
       isShow,
-      productList
+      productList,
+      changeCartItemChecked,
+      changeCartProductsChecked: $event =>
+        changeCartProductsChecked(shopId, $event),
+      clearCartProducts: () => clearCartProducts(shopId)
     }
   }
 }

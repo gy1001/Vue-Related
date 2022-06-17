@@ -49,6 +49,27 @@ export default createStore({
       shopInfo.productList[productId] = product
       state.cartList[shopId] = shopInfo
       setLocalStorageCartList(state)
+    },
+    changeCartItemChecked(state, payload) {
+      const { shopId, productId } = payload
+      const shopInfo = state.cartList[shopId]
+      shopInfo.productList[productId].checked =
+        !shopInfo.productList[productId].checked
+      setLocalStorageCartList(state)
+    },
+    clearCartProducts(state, payload) {
+      const { shopId } = payload
+      state.cartList[shopId].productList = {}
+      setLocalStorageCartList(state)
+    },
+    // 全选
+    changeCartProductsChecked(state, payload) {
+      const { shopId, isCheckedAll } = payload
+      const cartList = state.cartList[shopId]?.productList
+      for (const i in cartList) {
+        cartList[i].checked = isCheckedAll
+      }
+      setLocalStorageCartList(state)
     }
   },
   actions: {},
