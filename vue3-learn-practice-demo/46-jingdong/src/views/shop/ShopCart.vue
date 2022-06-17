@@ -1,7 +1,48 @@
 <template>
   <div class="shopcart">
+    <div class="warper" v-if="isShow" @click="showShopCart"></div>
+    <div class="product" v-if="isShow">
+      <div class="product-header">
+        <div class="product-header-checked">
+          <span
+            class="product-header-icon iconfont"
+            v-html="calculations.isCheckedAll ? '&#xe77b;' : '&#xe670;'"
+          ></span>
+          全选
+        </div>
+        <div class="product-header-Empty">清空购物车</div>
+      </div>
+      <!-- 商品列表-->
+      <template v-for="item in productList" :key="item.id">
+        <div class="product-item" v-if="item.count">
+          <div
+            class="product-item-checked iconfont"
+            v-html="item.checked ? '&#xe77b;' : '&#xe670;'"
+          ></div>
+          <img class="product-item-img" :src="item.imgUrl" />
+          <div class="product-details">
+            <h3 class="product-details-name">
+              {{ item.name }}
+            </h3>
+            <div class="product-price">
+              <p class="product-price-now">
+                <span>&yen;</span>{{ item.price }}
+              </p>
+              <span class="product-price-old"> &yen;{{ item.oldPrice }} </span>
+            </div>
+          </div>
+          <div class="product-count">
+            <span class="product-count-mius iconfont"> &#xe60b; </span>
+            <span class="product-count-number">
+              {{ item.count }}
+            </span>
+            <span class="product-count-plus iconfont"> &#xe61e; </span>
+          </div>
+        </div>
+      </template>
+    </div>
     <div class="check">
-      <div class="check-cart" @click="showShopCart()">
+      <div class="check-cart" @click="showShopCart">
         <span class="check-cart-icon iconfont">&#xe605;</span>
         <div class="check-cart-count" v-if="calculations.count">
           {{ calculations.count }}
@@ -20,6 +61,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCartEffect } from '../../effects/CartEffect'
 export default {
@@ -27,13 +69,18 @@ export default {
   setup() {
     const route = useRoute()
     const shopId = route.params.id
+    const isShow = ref(false)
     const handleSettlement = () => {}
-    const showShopCart = () => {}
-    const { calculations } = useCartEffect(shopId)
+    const { calculations, productList } = useCartEffect(shopId)
+    const showShopCart = () => {
+      isShow.value = !isShow.value
+    }
     return {
       handleSettlement,
       showShopCart,
-      calculations
+      calculations,
+      isShow,
+      productList
     }
   }
 }
@@ -103,6 +150,107 @@ export default {
     font-size: 0.14rem;
     line-height: 0.49rem;
     color: $bgColor;
+  }
+}
+.product {
+  overflow-y: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 0.49rem;
+  width: 100%;
+  background: $bgColor;
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.16rem 0.18rem;
+    margin-bottom: 0.16rem;
+    font-size: 0.14rem;
+    line-height: 0.2rem;
+    color: $content-fontColor;
+    border-bottom: 0.01rem solid $content-bgColor;
+    vertical-align: top;
+    &-icon {
+      font-size: 0.2rem;
+      color: $btn-bgColor;
+      margin-right: 0.08rem;
+    }
+  }
+  &-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 0.18rem 0.16rem;
+    &-checked {
+      font-size: 0.2rem;
+      color: $btn-bgColor;
+    }
+    &-img {
+      width: 0.46rem;
+      height: 0.46rem;
+      margin: 0 0.16rem;
+    }
+  }
+  &-details {
+    color: $content-fontColor;
+    &-name {
+      font-weight: 550;
+      font-size: 0.14rem;
+      margin: 0;
+    }
+  }
+  &-price {
+    margin-top: 0.06rem;
+    &-now {
+      display: inline-block;
+      color: $hightlight-fontColor;
+      font-weight: bold;
+      font-size: 0.14rem;
+      line-height: 0.14rem;
+      span {
+        font-size: 0.1rem;
+      }
+    }
+    &-old {
+      display: inline-block;
+      text-decoration: line-through;
+      color: $light-fontColor;
+      font-size: 0.1rem;
+      line-height: 0.2rem;
+    }
+  }
+  &-count {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 0.18rem;
+    &-mius,
+    &-plus {
+      display: inline-block;
+      font-size: 0.14rem;
+      text-align: center;
+      border-radius: 50%;
+    }
+    &-mius {
+      box-sizing: border-box;
+      width: 0.18rem;
+      height: 0.18rem;
+      color: $medium-fontColor;
+      border: 0.01rem solid $medium-fontColor;
+    }
+    &-plus {
+      width: 0.2rem;
+      height: 0.2rem;
+      line-height: 0.2rem;
+      background-color: $btn-bgColor;
+      color: $bgColor;
+    }
+    &-number {
+      margin: 0 0.1rem;
+      color: $content-fontColor;
+    }
   }
 }
 </style>
