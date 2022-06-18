@@ -14,6 +14,14 @@ const routes = [
       import(/* webpackChunkName: "shop" */ '../views/shop/ShopDetail.vue')
   },
   {
+    path: '/orderConfirmation/:id',
+    name: 'OrderConfirmation',
+    component: () =>
+      import(
+        /* webpackChunkName: "shopConfirmation" */ '../views/orderConfirmation/Index.vue'
+      )
+  },
+  {
     path: '/login',
     name: 'login',
     component: () =>
@@ -32,7 +40,8 @@ const routes = [
       const { isLogin } = localStorage
       isLogin ? next({ path: '/' }) : next()
     }
-  }
+  },
+  {}
 ]
 
 const router = createRouter({

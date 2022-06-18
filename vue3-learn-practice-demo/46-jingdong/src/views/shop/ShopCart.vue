@@ -61,14 +61,16 @@
         去结算
       </div>
     </div>
+    <Toast v-if="isShowToast" :message="toastMessage" />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useCartEffect } from '../../effects/CartEffect'
+import Toast, { useToastEffect } from '../../components/showToast.vue'
 
 const useShopCartInfoEffect = () => {
   const store = useStore()
@@ -90,12 +92,25 @@ const useShopCartInfoEffect = () => {
 
 export default {
   name: 'shop-cart',
+  components: {
+    Toast
+  },
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const store = useStore()
     const shopId = route.params.id
     const isShow = ref(false)
-    const handleSettlement = () => {}
+    const { showToast, toastMessage, isShowToast } = useToastEffect()
+    const handleSettlement = order => {
+      console.log(order)
+      if (!order) {
+        showToast('你还没选择宝贝哦！')
+      } else {
+        console.log(12221)
+        router.push({ path: `/orderConfirmation/${shopId}` })
+      }
+    }
     const { calculations, productList } = useCartEffect(shopId)
     const showShopCart = () => {
       isShow.value = !isShow.value
@@ -113,6 +128,8 @@ export default {
       calculations,
       isShow,
       productList,
+      toastMessage,
+      isShowToast,
       changeCartItemChecked,
       changeCartProductsChecked: $event =>
         changeCartProductsChecked(shopId, $event),
