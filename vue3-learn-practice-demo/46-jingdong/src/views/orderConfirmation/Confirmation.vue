@@ -7,7 +7,9 @@
           <b> &yen;{{ calculations.price }}</b>
         </span>
       </div>
-      <div class="bottom-confirmation">提交订单</div>
+      <div class="bottom-confirmation" @click="handleShowConfirmChange">
+        提交订单
+      </div>
     </div>
     <!-- 弹窗 -->
     <div class="popups" v-if="showConfirm">
@@ -22,25 +24,61 @@
         <h3 class="popups-pay-title">确认要离开收银台？</h3>
         <p class="popups-pay-message">请尽快完成支付，否则将被取消</p>
         <div class="popups-pay-btn">
-          <div class="popups-pay-cancel">取消订单</div>
-          <div class="popups-pay-confirm">确认支付</div>
+          <div class="popups-pay-cancel" @click="handleConfirmOrder(true)">
+            取消订单
+          </div>
+          <div class="popups-pay-confirm" @click="handleConfirmOrder(false)">
+            确认支付
+          </div>
         </div>
       </div>
     </div>
     <!-- 背景遮挡层 -->
-    <div class="popups-bg" v-if="showConfirm"></div>
+    <div
+      class="popups-bg"
+      v-if="showConfirm"
+      @click="handleShowConfirmChange"
+    ></div>
   </div>
 </template>
 
 <script>
+import { ref } from '@vue/reactivity'
+import { useRoute } from 'vue-router'
+import { useCartEffect } from '../../effects/CartEffect'
+
+// 下单相关逻辑
+const useMakeOrderEffect = () => {
+  const handleConfirmOrder = isCanceled => {
+    console.log('isCanceled', isCanceled)
+  }
+  return {
+    handleConfirmOrder
+  }
+}
+
+// 弹遮层显示相关逻辑
+const useShowMaskEffect = () => {
+  const showConfirm = ref(false)
+  const handleShowConfirmChange = () => {
+    showConfirm.value = !showConfirm.value
+  }
+  return { showConfirm, handleShowConfirmChange }
+}
+
 export default {
   name: 'order-confirm',
   setup() {
+    const route = useRoute()
+    const shopId = route.params.id
+    const { calculations } = useCartEffect(shopId)
+    const { showConfirm, handleShowConfirmChange } = useShowMaskEffect()
+    const { handleConfirmOrder } = useMakeOrderEffect()
     return {
-      calculations: {
-        price: 1122
-      },
-      showConfirm: false
+      handleConfirmOrder,
+      handleShowConfirmChange,
+      calculations,
+      showConfirm
     }
   }
 }
