@@ -38,17 +38,50 @@
 import { useRoute } from 'vue-router'
 import { useCartEffect } from '@/effects/CartEffect'
 import { ref } from '@vue/reactivity'
+import { computed } from '@vue/runtime-core'
+
+// 处理列表展示内容相关逻辑
+const useShowProductListEffect = (showAllProduct, productList) => {
+  const showProductList = computed(() => {
+    const list = []
+    let count = 0
+    if (!showAllProduct.value) {
+      // 默认2个
+      for (const item in productList.value) {
+        if (
+          productList.value[item].count &&
+          productList.value[item].checked &&
+          count < 2
+        ) {
+          count++
+          list.push(productList.value[item])
+        }
+      }
+    } else {
+      // 显示所有
+      for (const item in productList.value) {
+        if (productList.value[item].count && productList.value[item].checked) {
+          list.push(productList.value[item])
+        }
+      }
+    }
+    return list
+  })
+  return {
+    showProductList
+  }
+}
 export default {
   name: 'product-list',
   setup() {
     const route = useRoute()
     const showAllProduct = ref(false)
     const shopId = route.params.id
-    const { calculations, shopName } = useCartEffect(shopId)
-    const showProductList = [
-      { _id: 1, imgUrl: '', name: '商品名字1', price: 100, count: 2 },
-      { _id: 2, imgUrl: '', name: '商品名字2', price: 100, count: 2 }
-    ]
+    const { calculations, shopName, productList } = useCartEffect(shopId)
+    const { showProductList } = useShowProductListEffect(
+      showAllProduct,
+      productList
+    )
     return {
       showProductList,
       calculations,
