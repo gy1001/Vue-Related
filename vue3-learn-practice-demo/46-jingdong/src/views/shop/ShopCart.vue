@@ -103,11 +103,9 @@ export default {
     const isShow = ref(false)
     const { showToast, toastMessage, isShowToast } = useToastEffect()
     const handleSettlement = order => {
-      console.log(order)
       if (!order) {
         showToast('你还没选择宝贝哦！')
       } else {
-        console.log(12221)
         router.push({ path: `/orderConfirmation/${shopId}` })
       }
     }
