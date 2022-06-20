@@ -40,30 +40,48 @@
 </template>
 
 <script>
+import { toRefs, reactive } from 'vue'
 import TabBar from '@/components/TabBar.vue'
+import { get } from '../../utils/requests'
+
+const useOrderListEffect = () => {
+  const data = reactive({ list: [] })
+  const getNearShopList = async () => {
+    const result = await get('/api/order')
+    if (result.errno === 0 && result?.data?.length) {
+      const orderList = result.data
+      orderList.forEach(order => {
+        const products = order.products || []
+        let totalNumber = 0
+        let totalPrice = 0
+        // 遍历计算总价和总和
+        products.forEach(productItem => {
+          totalNumber += productItem?.orderSales || 0
+          totalPrice +=
+            productItem?.product?.price * productItem?.orderSales || 0
+        })
+        order.totalNumber = totalNumber
+        order.totalPrice = totalPrice
+      })
+      data.list = result.data
+    }
+  }
+  getNearShopList()
+  const { list } = toRefs(data)
+  console.log(list)
+  return { list }
+}
+
 export default {
   components: {
     TabBar
   },
   name: 'order-list',
   setup() {
+    const { list } = useOrderListEffect()
     return {
       isCanceled: false,
-      list: [
-        {
-          shopName: '沃尔玛',
-          totalNumber: 22,
-          totalPrice: 200,
-          products: [
-            {
-              product: { name: '商品', img: '' }
-            },
-            {
-              product: { name: '商品222', img: '' }
-            }
-          ]
-        }
-      ]
+      list: list
     }
   }
 }
