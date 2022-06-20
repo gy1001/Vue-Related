@@ -72,7 +72,7 @@ const useMakeOrderEffect = (shopId, shopName, productList, address) => {
       })
       if (result?.errno === 0) {
         store.commit('clearCartProducts', { shopId })
-        router.push({ name: 'orderList' })
+        router.push({ path: '/' })
       }
     } catch (error) {
       console.log(error)

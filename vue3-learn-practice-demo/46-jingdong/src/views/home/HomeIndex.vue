@@ -15,7 +15,7 @@
     <div class="border-line"></div>
     <NearShop />
   </div>
-  <TabBar />
+  <TabBar :currentIndex="0" />
 </template>
 
 <script>

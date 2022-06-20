@@ -3,27 +3,38 @@
     <!-- BEM 命名规则
       block_element Modifier
      -->
-    <span class="docker_item docker_item--active">
-      <i class="iconfont">&#xe752;</i>
-      <div class="docker_item-title">首页</div>
-    </span>
-    <span class="docker_item">
-      <i class="iconfont">&#xe64e;</i>
-      <div class="docker_item-title">购物车</div>
-    </span>
-    <span class="docker_item">
-      <i class="iconfont">&#xe600;</i>
-      <div class="docker_item-title">订单</div>
-    </span>
-    <span class="docker_item">
-      <i class="iconfont">&#xe63c;</i>
-      <div class="docker_item-title">我的</div>
+    <span
+      v-for="(item, index) in dockerList"
+      :key="item.icon"
+      :class="{
+        docker_item: true,
+        'docker_item--active': index === currentIndex
+      }"
+    >
+      <router-link :to="item.to">
+        <i class="iconfont" v-html="item.icon"></i>
+        <div class="docker_item-title">{{ item.title }}</div>
+      </router-link>
     </span>
   </div>
 </template>
 
 <script>
-export default {}
+import { reactive } from 'vue'
+export default {
+  props: ['currentIndex'],
+  setup() {
+    const dockerList = reactive([
+      { title: '首页', icon: '&#xe752;', to: { name: 'homeIndex' } },
+      { title: '购物车', icon: '&#xe64e;', to: { name: 'cartList' } },
+      { title: '订单', icon: '&#xe600;', to: { name: 'orderList' } },
+      { title: '我的', icon: '&#xe63c;', to: { name: 'mine' } }
+    ])
+    return {
+      dockerList
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -51,6 +62,10 @@ export default {}
       font-size: 0.2rem; // 低于12px 浏览器不会再处理，所以要进行特殊处理
       transform-origin: center top;
       transform: scale(0.5, 0.5);
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
     }
     .iconfont {
       font-size: 0.18rem;

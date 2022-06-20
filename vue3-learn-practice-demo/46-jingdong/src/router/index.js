@@ -8,6 +8,21 @@ const routes = [
       import(/* webpackChunkName: "home" */ '../views/home/HomeIndex.vue')
   },
   {
+    path: '/cartList',
+    name: 'cartList',
+    component: () => import('../views/cartList/index.vue')
+  },
+  {
+    path: '/orderList',
+    name: 'orderList',
+    component: () => import('../views/orderList/index.vue')
+  },
+  {
+    path: '/mine',
+    name: 'mine',
+    component: () => import('../views/mine/index.vue')
+  },
+  {
     path: '/shop/:id',
     name: 'ShopDetail',
     component: () =>
