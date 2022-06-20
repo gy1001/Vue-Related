@@ -7,6 +7,7 @@
         class="shop"
         v-for="(item, index) in cartListWithProducts"
         :key="index"
+        @click="handleGoToPay(index)"
       >
         <div class="shop-title">{{ item.shopName }}</div>
         <div class="products">
@@ -41,73 +42,54 @@
 </template>
 
 <script>
+import { useStore } from 'vuex'
+import { computed } from 'vue'
 import TabBar from '@/components/TabBar.vue'
+import { useRouter } from 'vue-router'
+
+const useCartEffect = () => {
+  const store = useStore()
+  const cartList = store.state.cartList
+  const cartListWithProducts = computed(() => {
+    const newCartList = {}
+    for (const shopIdKey in cartList) {
+      let total = 0
+      const products = cartList[shopIdKey].productList
+      for (const productIdKey in products) {
+        const product = products[productIdKey]
+        total += product.count || 0
+      }
+      if (total > 0) {
+        newCartList[shopIdKey] = cartList[shopIdKey]
+      }
+    }
+    return newCartList
+  })
+  return {
+    cartListWithProducts
+  }
+}
+// 处理去结算逻辑
+const useGoToPayEffect = () => {
+  const router = useRouter()
+  const handleGoToPay = shopId => {
+    router.push({
+      path: `/orderConfirmation/${shopId}`
+    })
+  }
+  return { handleGoToPay }
+}
 export default {
   components: {
     TabBar
   },
   name: 'cart-list',
   setup() {
+    const { cartListWithProducts } = useCartEffect()
+    const { handleGoToPay } = useGoToPayEffect()
     return {
-      cartListWithProducts: [
-        {
-          shopName: '商铺名字',
-          productList: [
-            {
-              _id: 1,
-              count: 12,
-              imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-              name: '商品名字1',
-              price: 100
-            },
-            {
-              _id: 2,
-              count: 22,
-              imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-              name: '商品名字2',
-              price: 100
-            }
-          ]
-        },
-        {
-          shopName: '商铺名字22',
-          productList: [
-            {
-              _id: 1,
-              count: 12,
-              imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-              name: '商品名字1',
-              price: 100
-            },
-            {
-              _id: 2,
-              count: 22,
-              imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-              name: '商品名字2',
-              price: 100
-            }
-          ]
-        },
-        {
-          shopName: '商铺名字333',
-          productList: [
-            {
-              _id: 1,
-              count: 12,
-              imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-              name: '商品名字3',
-              price: 100
-            },
-            {
-              _id: 2,
-              count: 22,
-              imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-              name: '商品名字2',
-              price: 100
-            }
-          ]
-        }
-      ]
+      handleGoToPay,
+      cartListWithProducts: cartListWithProducts
     }
   }
 }
