@@ -40,8 +40,7 @@ const routes = [
       const { isLogin } = localStorage
       isLogin ? next({ path: '/' }) : next()
     }
-  },
-  {}
+  }
 ]
 
 const router = createRouter({

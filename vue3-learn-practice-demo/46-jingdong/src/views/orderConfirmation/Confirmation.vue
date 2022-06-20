@@ -43,13 +43,40 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
-import { useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 import { useCartEffect } from '../../effects/CartEffect'
+import { post } from '../../utils/requests'
 
 // 下单相关逻辑
-const useMakeOrderEffect = () => {
-  const handleConfirmOrder = isCanceled => {
+const useMakeOrderEffect = (shopId, shopName, productList, address) => {
+  const store = useStore()
+  const router = useRouter()
+  const handleConfirmOrder = async isCanceled => {
+    const products = []
+    // 获取选中的商品列表
+    for (const i in productList.value) {
+      const product = productList.value[i]
+      if (product.checked) {
+        products.push({ id: product._id, num: product.count })
+      }
+    }
+    try {
+      const result = await post('/api/order', {
+        addressId: address.value,
+        shopId,
+        shopName: shopName.value,
+        products,
+        isCanceled
+      })
+      if (result?.errno === 0) {
+        store.commit('clearCartProducts', { shopId })
+        router.push({ name: 'orderList' })
+      }
+    } catch (error) {
+      console.log(error)
+    }
     console.log('isCanceled', isCanceled)
   }
   return {
@@ -71,9 +98,15 @@ export default {
   setup() {
     const route = useRoute()
     const shopId = route.params.id
-    const { calculations } = useCartEffect(shopId)
+    const address = ref(1)
+    const { calculations, shopName, productList } = useCartEffect(shopId)
     const { showConfirm, handleShowConfirmChange } = useShowMaskEffect()
-    const { handleConfirmOrder } = useMakeOrderEffect()
+    const { handleConfirmOrder } = useMakeOrderEffect(
+      shopId,
+      shopName,
+      productList,
+      address
+    )
     return {
       handleConfirmOrder,
       handleShowConfirmChange,
