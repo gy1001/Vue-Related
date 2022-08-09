@@ -11,7 +11,28 @@ const parseTemplateToTokens = (templateStr) => {
   while (!scanner.eos()) {
     words = scanner.scanUtil('{{')
     if (words) {
-      tokens.push(['text', words])
+      // tokens.push(['text', words])
+      //--------修改为如下代码-----------
+      let _word = ''
+      let isInnerTag = false
+      for (let index = 0; index < words.length; index++) {
+        const word = words[index]
+        if (word === '<') {
+          isInnerTag = true
+        } else if (word === '>') {
+          isInnerTag = false
+        }
+        // 如果当前 element 是空格，只有在 isInnerTag 为 true 时候才能加
+        if (/\s/.test(word)) {
+          if (isInnerTag) {
+            _word += word
+          }
+        } else {
+          _word += word
+        }
+      }
+      tokens.push(['text', _word])
+      //-------------------
     }
     // 过 双大括号
     scanner.scan('{{')
