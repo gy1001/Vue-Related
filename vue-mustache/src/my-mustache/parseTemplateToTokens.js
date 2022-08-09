@@ -1,3 +1,4 @@
+import nestTokens from './nestTokens'
 import Scanner from './Scanner'
 
 const parseTemplateToTokens = (templateStr) => {
@@ -28,7 +29,7 @@ const parseTemplateToTokens = (templateStr) => {
     // 过 双大括号
     scanner.scan('}}')
   }
-  console.log(tokens)
+  return nestTokens(tokens)
 }
 
 export default parseTemplateToTokens
