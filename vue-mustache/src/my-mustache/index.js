@@ -2,6 +2,7 @@ import parseTemplateToTokens from './parseTemplateToTokens.js'
 import renderTemplate from './renderTemplate.js'
 
 const MyMustache = {
+  // 渲染函数
   render(templateStr, data) {
     var tokens = parseTemplateToTokens(templateStr)
     // 调用 renderTemplate 函数，让tokens 数组变成 dom 字符串
