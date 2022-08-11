@@ -17,45 +17,28 @@ const patch = init([
 
 const container = document.getElementById('container')
 
-const vnode = h(
-  'div#container.two.classes',
-  {
-    on: {
-      click: function () {
-        console.log('点击了')
-      },
-    },
-  },
-  [
-    h('span', { style: { fontWeight: 'bold' } }, 'This is bold'),
-    ' and this is just normal text',
-    h('a', { props: { href: '/foo' } }, "I'll take you places!"),
-  ]
-)
-// Patch into empty DOM element – this modifies the DOM as a side effect
-patch(container, vnode)
+const vnode1 = h('ul', {}, [
+  h('li', {}, 'A'),
+  h('li', {}, 'B'),
+  h('li', {}, 'C'),
+  h('li', {}, 'D'),
+])
 
-const newVnode = h(
-  'div#container.two.classes',
-  {
-    on: {
-      click: () => {
-        console.log('我点击被更新替换了')
-      },
-    },
-  },
-  [
-    h(
-      'span',
-      { style: { fontWeight: 'normal', fontStyle: 'italic' } },
-      'This is now italic type'
-    ),
-    ' and this is still just normal text',
-    h('a', { props: { href: '/bar' } }, "I'll take you places!"),
-  ]
-)
+patch(container, vnode1)
 
-setTimeout(() => {
-  // Second `patch` invocation
-  patch(vnode, newVnode) // Snabbdom efficiently updates the old view to the new state
-}, 3000)
+const vnode2 = h('ul', {}, [
+  h('li', {}, 'F'),
+  h('li', {}, 'A'),
+  h('li', {}, 'B'),
+  h('li', {}, 'C'),
+  h('li', {}, 'D'),
+  h('li', {}, 'E'),
+])
+
+const btn = document.createElement('button')
+btn.innerHTML = '点击我更改内容'
+btn.addEventListener('click', function () {
+  patch(vnode1, vnode2)
+})
+
+document.body.appendChild(btn)
