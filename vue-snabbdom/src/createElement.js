@@ -17,6 +17,12 @@ export default function createElement(vNode) {
   } else if (Array.isArray(vNode.children) && vNode.children.length > 0) {
     console.log('这里进行处理多个子节点的循环处理')
     // 它内部是子节点，需要进行 递归创建子节点
+    for (let index = 0; index < vNode.children.length; index++) {
+      const node = vNode.children[index]
+      let nodeDOM = createElement(node)
+      domNode.appendChild(nodeDOM)
+    }
+    vNode.elm = domNode
   }
 
   // 返回 elm，是一个纯 DOM 节点
