@@ -15,7 +15,24 @@ function patch(oldVNode, newVNode) {
   }
   // 判断 oldVNode 和 newVNode 是不是同一个节点
   if (oldVNode.key === newVNode.key && oldVNode.sel === newVNode.sel) {
-    console.log('是同一个节点，需要做精细化比较')
+    // '是同一个节点，需要做精细化比较'
+    // 在内存中是不是同一个节点
+    if (oldVNode === newVNode) {
+      return
+    }
+    if (
+      newVNode.text !== undefined &&
+      (newVNode.children === undefined || newVNode.children.length === 0)
+    ) {
+      console.log('判断 newVNode 有 text 属性')
+      if (newVNode.text !== oldVNode.text) {
+        // 把 oldVNode.elm 中的text 变为 newVNode 中的text(即使 oldVNode 有children属性，innerText一旦改变后，老children也就没了)
+        oldVNode.elm.innerText = newVNode.text
+        return
+      }
+    } else {
+      console.log('newVNode 没有 text 属性')
+    }
   } else {
     console.log('不是同一个节点，暴力插入新的，删除旧的')
     const newVNodeElm = createElement(newVNode)

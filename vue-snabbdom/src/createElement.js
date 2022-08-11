@@ -15,7 +15,7 @@ export default function createElement(vNode) {
     // 补充 elm 属性
     vNode.elm = domNode
   } else if (Array.isArray(vNode.children) && vNode.children.length > 0) {
-    console.log('这里进行处理多个子节点的循环处理')
+    // '这里进行处理多个子节点的循环处理'
     // 它内部是子节点，需要进行 递归创建子节点
     for (let index = 0; index < vNode.children.length; index++) {
       const node = vNode.children[index]
