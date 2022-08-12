@@ -1,3 +1,5 @@
+import updateChildren from './updateChildren'
+
 export default function patchVNode(oldVNode, newVNode) {
   // 在内存中是不是同一个节点
   if (oldVNode === newVNode) {
@@ -19,6 +21,7 @@ export default function patchVNode(oldVNode, newVNode) {
     if (oldVNode.children !== undefined && oldVNode.children.length > 0) {
       // 老的节点有 children，此时是最复杂的情况，就是新老节点都有 children
       console.log('最复杂')
+      updateChildren(oldVNode.elm, oldVNode.children, newVNode.children)
     } else {
       // 老的没有 children 新的有 children
       oldVNode.elm.innerText = ''

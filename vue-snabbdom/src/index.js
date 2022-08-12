@@ -3,20 +3,21 @@ import patch from './patch'
 const container = document.getElementById('container')
 
 const vnode1 = h('ul', {}, [
-  h('li', { ke: 'A' }, 'A'),
-  h('li', { ke: 'B' }, 'B'),
-  h('li', { ke: 'C' }, 'C'),
+  h('li', { key: 'A' }, 'A'),
+  h('li', { key: 'B' }, 'B'),
+  h('li', { key: 'C' }, 'C'),
+  h('li', { key: 'D' }, 'D'),
+  h('li', { key: 'E' }, 'E'),
 ])
 patch(container, vnode1)
 
 // 对于不同的节点
 const vnode2 = h('ul', {}, [
-  h('li', { ke: 'A' }, 'A'),
-  h('li', { ke: 'B' }, 'B'),
-  h('li', { ke: 'M' }, 'M'),
-  h('li', { ke: 'N' }, 'N'),
-  h('li', { ke: 'F' }, 'D'),
-  h('li', { ke: 'C' }, 'C'),
+  h('li', { key: 'E' }, 'EE'),
+  h('li', { key: 'D' }, 'DD'),
+  h('li', { key: 'C' }, 'CC'),
+  h('li', { key: 'B' }, 'BB'),
+  h('li', { key: 'A' }, 'AA'),
 ])
 // const vnode2 = h('h1', { key: 'first' }, 'hello world12222')
 const btn = document.createElement('button')
