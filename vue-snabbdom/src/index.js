@@ -2,23 +2,21 @@ import { h } from 'snabbdom'
 import patch from './patch'
 const container = document.getElementById('container')
 
-const vnode1 = h('h1', { key: 'first' }, 'old hello world')
+const vnode1 = h('ul', {}, [
+  h('li', { ke: 'A' }, 'A'),
+  h('li', { ke: 'B' }, 'B'),
+  h('li', { ke: 'C' }, 'C'),
+])
 patch(container, vnode1)
 
 // 对于不同的节点
-const vnode2 = h('h1', { key: 'first' }, [
-  h('h2', {}, 'hello world'),
-  h('h3', {}, 'hello world'),
-  h('h4', {}, 'hello world'),
-  h('h5', {}, 'hello world'),
-  h('h6', {}, 'hello world'),
-  h('h7', {}, [
-    h('ul', {}, [
-      h('li', {}, 'hello world1'),
-      h('li', {}, 'hello world2'),
-      h('li', {}, 'hello world3'),
-    ]),
-  ]),
+const vnode2 = h('ul', {}, [
+  h('li', { ke: 'A' }, 'A'),
+  h('li', { ke: 'B' }, 'B'),
+  h('li', { ke: 'M' }, 'M'),
+  h('li', { ke: 'N' }, 'N'),
+  h('li', { ke: 'F' }, 'D'),
+  h('li', { ke: 'C' }, 'C'),
 ])
 // const vnode2 = h('h1', { key: 'first' }, 'hello world12222')
 const btn = document.createElement('button')
