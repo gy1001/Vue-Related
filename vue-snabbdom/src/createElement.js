@@ -7,7 +7,7 @@ export default function createElement(vNode) {
   const domNode = document.createElement(vNode.sel)
   // 判断有子节点还是有文本
   if (
-    (vNode.text !== '') &
+    vNode.text !== '' &&
     (vNode.children === undefined || vNode.children.length === 0)
   ) {
     // 它的内部是文字

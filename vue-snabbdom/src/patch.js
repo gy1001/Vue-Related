@@ -32,6 +32,17 @@ function patch(oldVNode, newVNode) {
       }
     } else {
       console.log('newVNode 没有 text 属性')
+      // 判断 oldVNode 有没有 children
+      if (oldVNode.children !== undefined && oldVNode.children.length > 0) {
+        // 老的节点有 children，此时是最复杂的情况，就是新老节点都有 children
+      } else {
+        // 老的没有 children 新的有 children
+        oldVNode.elm.innerText = ''
+        newVNode.children.forEach((node) => {
+          const newNodeDom = createElement(node)
+          oldVNode.elm.appendChild(newNodeDom)
+        })
+      }
     }
   } else {
     console.log('不是同一个节点，暴力插入新的，删除旧的')
