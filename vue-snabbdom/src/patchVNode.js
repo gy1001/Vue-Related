@@ -5,6 +5,7 @@ export default function patchVNode(oldVNode, newVNode) {
   if (oldVNode === newVNode) {
     return
   }
+  newVNode.elm = oldVNode.elm
   if (
     newVNode.text !== undefined &&
     (newVNode.children === undefined || newVNode.children.length === 0)
