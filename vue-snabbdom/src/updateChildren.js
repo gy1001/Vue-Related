@@ -1,3 +1,4 @@
+import createElement from './createElement'
 import patchVNode from './patchVNode'
 
 function checkSameVNode(vNode1, vNode2) {
@@ -12,6 +13,8 @@ export default function updateChildren(parentElm, oldChildren, newChildren) {
   let oldEndIndex = oldChildren.length - 1
   let newStartIndex = 0
   let newEndIndex = newChildren.length - 1
+  // 老节点中的key集合
+  let keyMap
   // 旧前节点、旧后节点、新前节点、新后节点
   let oldStartNode = oldChildren[oldStartIndex]
   let oldEndNode = oldChildren[oldEndIndex]
@@ -49,7 +52,49 @@ export default function updateChildren(parentElm, oldChildren, newChildren) {
       newStartNode = newChildren[++newStartIndex]
     } else {
       console.log('四种方式均没有命中')
+      if (!keyMap) {
+        keyMap = {}
+        for (let index = oldStartIndex; index < oldEndNode; index++) {
+          const key = oldChildren[index].key
+          if (key !== undefined) {
+            keyMap[key] = index
+          }
+        }
+      }
+      // 寻找当期这项（newStartIndex）在keyMap中映射的位置序号
+      const indexInOld = keyMap[newStartNode.key]
+      if (!indexInOld) {
+        console.log('我是新增的')
+        // 如果不存在，说明 当前项目是全新的项,插在未处理节点 oldStartNode 的前面
+        parentElm.insertBefore(createElement(newStartNode), oldStartNode.elm)
+      } else {
+        console.log('如果不是 undefined 说明不是全新的项目，需要移动')
+        const elmToMove = oldChildren[indexInOld]
+        patchVNode(elmToMove, newStartNode)
+        // 把这项设置为 undefined， 表示已经处理完这项
+        oldChildren[indexInOld] = undefined
+        // 调用 insertBefore 把它移动到 oldStartNode 前面
+        parentElm.insertBefore(elmToMove.elm, oldStartNode.elm)
+      }
+      newStartNode = newChildren[++newStartIndex]
     }
   }
   console.log('while循环结束')
+  // 这里要做删除，<或者新增剩余节点
+  if (newStartIndex <= newEndIndex) {
+    console.log('新节点有剩余的，需要新增')
+    const before = newChildren[newEndIndex + 1]
+      ? newChildren[newEndIndex + 1].elm
+      : null
+    for (let index = newStartIndex; index <= newEndIndex; index++) {
+      // 如果引用节点为 null，则将指定的节点添加到指定父节点的子节点列表的末尾。
+      parentElm.insertBefore(createElement(newChildren[index]), before)
+    }
+  } else if (oldStartIndex <= oldEndIndex) {
+    // 循环结束了，oldStartIndex 还是小于 oldEndIndex
+    // 批量删除 oldStartIndex 和 oldEndIndex 之间的项
+    for (let index = oldStartIndex; index <= oldEndIndex; index++) {
+      parentElm.removeChild(oldChildren[index].elm)
+    }
+  }
 }
