@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>02-算法相关储备-递归深入</title>
+  </head>
+  <body></body>
+  <script>
+    // 试着输出斐波那契额数列中的前10项，即 1、1、2、3、5、8、13、21、34、55
+    // 创建一个函数，功能是返回下标为n的这项的数字
+    // function fib(n) {
+    //   if (n === 0 || n === 1) {
+    //     return 1
+    //   }
+    //   return fib(n - 2) + fib(n - 1)
+    // }
+
+    // 优化方案
+    // 缓存对象
+    const cacheObj = {}
+    function fib(n) {
+      if (cacheObj.hasOwnProperty(n)) {
+        return cacheObj[n]
+      }
+      const result = n === 0 || n === 1 ? 1 : fib(n - 2) + fib(n - 1)
+      cacheObj[n] = result
+      return result
+    }
+
+    for (let index = 0; index < 10; index++) {
+      console.log(fib(index))
+    }
+  </script>
+</html>
