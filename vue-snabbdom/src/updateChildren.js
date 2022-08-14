@@ -21,7 +21,17 @@ export default function updateChildren(parentElm, oldChildren, newChildren) {
   let newStartNode = newChildren[newStartIndex]
   let newEndNode = newChildren[newEndIndex]
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
-    console.log(oldStartNode, newStartNode)
+    // 如果旧的开始节点不存在，也就是之前设置了 undefined
+    if (oldStartNode == null) {
+      // 注意 undefined == null  为true
+      oldStartNode = oldChildren[++oldStartIndex]
+    } else if (oldEndNode == null) {
+      oldEndNode = oldChildren[--oldEndIndex]
+    } else if (newStartNode == null) {
+      newStartNode = newChildren[++newStartIndex]
+    } else if (newEndNode == null) {
+      newEndNode = newChildren[--newEndIndex]
+    }
     if (checkSameVNode(oldStartNode, newStartNode)) {
       console.log('1旧前与新前相同')
       //  比较新旧节点
