@@ -3,7 +3,10 @@ import parse from './parse'
 
 var templateString = `
   <div>
-    <h3>你好</h3>
+    <h3>
+      <span>你好</span>
+      <span>我是我 我是</span>
+    </h3>
     <ul>
       <li>A</li>
       <li>B</li>

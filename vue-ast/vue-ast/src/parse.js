@@ -30,7 +30,7 @@ export default function parse(templateString) {
       // 将开始标记推入stack1中
       stack1.push(tag)
       // 将空数组推入 stack2 中
-      stack2.push([])
+      stack2.push({ tag: tag, type: 2 })
       // 这里要 +2 因为<> 也占用两个位置
       index += tag.length + 2
     } else if (endRegexp.test(restString)) {
@@ -39,20 +39,30 @@ export default function parse(templateString) {
       console.log('检测到结束标记</' + tag)
       if (tag === stack1[stack1.length - 1]) {
         stack1.pop()
+        // 最后一项不能弹栈
+        if (stack2.length <= 1) {
+          break
+        }
+        const pop_obj = stack2.pop()
+        if (!stack2[stack2.length - 1].children) {
+          stack2[stack2.length - 1].children = []
+        }
+        stack2[stack2.length - 1].children.push(pop_obj)
       } else {
         throw new Error(stack1[stack1.length - 1] + '标签没有封闭!!!')
       }
       index += tag.length + 3
     } else if (wordRegexp.test(restString)) {
-      console.log(restString, restString.match(wordRegexp))
       const word = restString.match(wordRegexp)[1]
       if (word.trim()) {
         console.log('监测到文本:' + word)
+        stack2[stack2.length - 1].text = word
+        stack2[stack2.length - 1].type = 3
       }
       index += word.length
     } else {
       index++
     }
   }
-  console.log(stack1, stack2)
+  return stack2[0]
 }
