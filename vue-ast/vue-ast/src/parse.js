@@ -14,7 +14,7 @@ export default function parse(templateString) {
   // 指针
   let index = 0
   // 开始标记
-  const startRegexp = /^\<([a-z]+[0-9]?)\>/
+  const startRegexp = /^\<([a-z]+[0-9]?)(\s[^\<]+)?\>/
   const endRegexp = /^\<\/([a-z]+[0-9]?)\>/
   // 因为它是在 跳过开始标签 、结束标签之后的文字进行匹配，只需要判断不是以 \< 开头即可，
   const wordRegexp = /^([^\<]+)\<\/([a-z]+[0-9]?)\>/
@@ -24,15 +24,17 @@ export default function parse(templateString) {
     const restString = templateString.substring(index)
     // 判断这个字符是不是一个开始标签
     if (startRegexp.test(restString)) {
-      // index += 2
       const tag = restString.match(startRegexp)[1]
+      const attrs = restString.match(startRegexp)[2]
       console.log('检测到开始标记<' + tag)
       // 将开始标记推入stack1中
       stack1.push(tag)
-      // 将空数组推入 stack2 中
-      stack2.push({ tag: tag, type: 2 })
+      // 将数组对象推入 stack2 中
+      const parseAttrsArr = attrs ? parseAttrs(attrs) : []
+      stack2.push({ tag: tag, type: 2, attrs: parseAttrsArr })
       // 这里要 +2 因为<> 也占用两个位置
-      index += tag.length + 2
+      const attrsLength = attrs ? attrs.length : 0
+      index += tag.length + 2 + attrsLength
     } else if (endRegexp.test(restString)) {
       // 判断这个字符是不是一个结束标签
       const tag = restString.match(endRegexp)[1]
@@ -65,4 +67,29 @@ export default function parse(templateString) {
     }
   }
   return stack2[0]
+}
+
+function parseAttrs(attrStr) {
+  const attrsArr = []
+  // 当前是否在引号内部
+  let isInQuote = false
+  let point = 0
+  for (let index = 0; index < attrStr.length; index++) {
+    const currentChar = attrStr[index]
+    if (currentChar === '"' && isInQuote === false) {
+      isInQuote = true
+    } else if (currentChar === '"' && isInQuote === true) {
+      const result = attrStr
+        .substring(point, index + 1)
+        .trim()
+        .match(/^(.+)="(.+)"$/)
+      attrsArr.push({
+        name: result[1],
+        value: result[2],
+      })
+      point = index + 1
+      isInQuote = false
+    }
+  }
+  return attrsArr
 }

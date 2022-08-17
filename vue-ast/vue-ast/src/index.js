@@ -1,10 +1,9 @@
-// const { default: parse } = require('./parse')
 import parse from './parse'
 
 var templateString = `
-  <div>
+  <div class="mine your" id="box" data-color="red">
     <h3>
-      <span>你好</span>
+      <span class="text">你好</span>
       <span>我是我 我是</span>
     </h3>
     <ul>
