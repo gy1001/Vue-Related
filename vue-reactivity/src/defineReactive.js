@@ -1,6 +1,8 @@
+import Dep from './Dep'
 import observe from './observe'
 
 export default function defineReactive(data, key, val) {
+  const dep = new Dep()
   // value 可能也是对象，所以也要进行做处理
   observe(val)
   Object.defineProperty(data, key, {

@@ -2,6 +2,7 @@ import { arrayMethods } from './array'
 import defineReactive from './defineReactive'
 import observe from './observe'
 import { def } from './utils'
+import Dep from './Dep'
 
 const hasProto = '__proto__' in {}
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
@@ -9,6 +10,8 @@ const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
 export default class Observer {
   constructor(value) {
+    // 每一个 Observer 的实例上，都有一个dep实例
+    this.dep = new Dep()
     // 给实例(this,一定要注意，构造函数中的this不是类本身，而是表示实例)添加了 __ob__属性，值是这次new的实例
     def(value, '__ob__', this, false)
     // 如果类型是数组，要讲这个数组的原型指向新创建的 arrayMethods
