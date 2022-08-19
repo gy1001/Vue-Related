@@ -1,5 +1,6 @@
 import observe from './observe'
 import array from './array'
+import Watcher from './Watcher'
 const obj = {
   a: {
     m: {
@@ -20,3 +21,8 @@ obj.c.splice(5, 0, { name: '孙悟空', age: '500' })
 console.log(obj.c)
 obj.c[5].name = '猪八戒'
 console.log(obj.c[5])
+
+new Watcher(obj, 'a.m.n', (newVal, oldVal) => {
+  console.log('☆☆☆☆☆☆☆', newVal, oldVal)
+})
+obj.a.m.n = 10

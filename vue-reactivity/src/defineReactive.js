@@ -8,6 +8,9 @@ export default function defineReactive(data, key, val) {
   Object.defineProperty(data, key, {
     get() {
       console.log('获取' + key + '属性')
+      if (Dep.target) {
+        dep.addSub(Dep.target)
+      }
       return val
     },
     set(newVal) {
@@ -18,6 +21,7 @@ export default function defineReactive(data, key, val) {
       // 当设置了新值，新值也要被 observe
       observe(newVal)
       val = newVal
+      dep.notify()
       return newVal
     },
   })
