@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script src="../../dist/vue.js"></script>
+  <!-- <script>
+    const { h, render, Text, Comment, Fragment } = Vue
+    const vnodeText = h(Text, '这是一个文本节点')
+    console.log(vnodeText)
+    // 可以通过 render 进行渲染
+    render(vnodeText, document.querySelector('#app'))
+  </script> -->
+  <!-- <script>
+    const { h, render, Text, Comment, Fragment } = Vue
+    const vnodeComment = h(Comment, '这是一段注释')
+    console.log(vnodeComment)
+    render(vnodeComment, document.querySelector('#app'))
+  </script> -->
+  <script>
+    const { h, Text, Comment, Fragment } = Vue
+    const vnodeText = h(Text, '这是一个文本节点')
+    console.log('vnodeText', vnodeText)
+    const vnodeComment = h(Comment, '这是一段注释')
+    console.log('vnodeCommentv', vnodeComment)
+    const vnodeFragment = h(Fragment, '这是一个 Fragment')
+    console.log('vnodeFragment', vnodeFragment)
+  </script>
+</html>
