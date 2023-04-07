@@ -20,7 +20,7 @@ export function renderComponentRoot(instance) {
   try {
     if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
       // 获取到 result 返回值，如果 render 中使用了 this，则需要修改 this 指向
-      result = normalizeVNode(render!.call(data, data))
+      result = normalizeVNode(render!.call(data, data || {}))
     }
   } catch (error) {
     console.log(error, 'error')

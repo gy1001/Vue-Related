@@ -3,6 +3,7 @@ import { isFunction, isObject } from '@vue/shared'
 import { onBeforeMount, onMounted } from './apiLifecycle'
 
 let uid = 0
+let compile: any = null
 export function createComponentInstance(vnode) {
   const { type } = vnode
   const instance = {
@@ -18,7 +19,7 @@ export function createComponentInstance(vnode) {
     bc: null, // beforeCreate
     c: null, // created
     bm: null, // beforeMount
-    m: null // mounted
+    m: null, // mounted
   }
   return instance
 }
@@ -49,10 +50,19 @@ export function finishComponentSetup(instance) {
   const component = instance.type
   // 组件不存在 render 时，才需要重新赋值
   if (!instance.render) {
+    if (compile && !component.render) {
+      if (component.template) {
+        const template = component.template
+        component.render = compile(template)
+      }
+    }
     instance.render = component.render
   }
   // 改变 options 中的 this 指向
   applyOptions(instance)
+}
+export function registerRuntimeCompiler(_compile: any) {
+  compile = _compile
 }
 
 function applyOptions(instance: any) {
@@ -61,7 +71,7 @@ function applyOptions(instance: any) {
     beforeCreate,
     created,
     beforeMount,
-    mounted
+    mounted,
   } = instance.type
   // hooks
   if (beforeCreate) {
@@ -103,5 +113,5 @@ export const enum LifecycleHooks {
   BEFORE_CREATE = 'bc',
   CREATED = 'c',
   BEFEORE_MOUNT = 'bm',
-  MOUNTED = 'm'
+  MOUNTED = 'm',
 }
