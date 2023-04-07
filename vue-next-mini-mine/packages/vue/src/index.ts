@@ -8,10 +8,10 @@ export {
   Comment,
   Fragment,
   createElementVNode,
-  createCommentVNode
+  createCommentVNode,
 } from '@vue/runtime-core'
 
-export { render } from '@vue/runtime-dom'
+export { render, createApp } from '@vue/runtime-dom'
 // export { compile } from '@vue/compiler-dom'
 export { compile } from '@vue/vue-compact'
 export { toDisplayString } from '@vue/shared'

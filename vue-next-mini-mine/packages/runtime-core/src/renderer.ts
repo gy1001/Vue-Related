@@ -5,6 +5,7 @@ import { normalizeVNode, renderComponentRoot } from './commponentRenderUtis'
 import { createComponentInstance, setupComponent } from './component'
 import { queuePreFlushCb } from './scheduler'
 import { Fragment, Text, Comment } from './vnode'
+import { createAppAPI } from './apiCreateApp'
 
 export interface RendererOptions {
   /**
@@ -46,7 +47,7 @@ export function baseCreateRender(options: RendererOptions) {
     removeElement: hostRemoveElement,
     createText: hostCreateText,
     setText: hostSetText,
-    createComment: hostCreateComment
+    createComment: hostCreateComment,
   } = options
   const processElement = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
@@ -117,7 +118,7 @@ export function baseCreateRender(options: RendererOptions) {
     oldChildren,
     newChildren,
     container,
-    parentAnchor
+    parentAnchor,
   ) => {
     // 索引
     let i = 0
@@ -188,7 +189,7 @@ export function baseCreateRender(options: RendererOptions) {
             console.warn(
               `Duplicate keys found during update:`,
               JSON.stringify(nextChild.key),
-              `Make sure keys are unique.`
+              `Make sure keys are unique.`,
             )
           }
           // 把 key 和 对应的索引，放到 keyToNewIndexMap 对象中
@@ -261,7 +262,7 @@ export function baseCreateRender(options: RendererOptions) {
       console.log(
         '这里处理 移动和挂载',
         toBePatched,
-        increasingNewIndexSequence
+        increasingNewIndexSequence,
       )
       for (i = toBePatched - 1; i >= 0; i--) {
         //   // nextIndex 需要更新的新节点下标
@@ -421,7 +422,7 @@ export function baseCreateRender(options: RendererOptions) {
     hostInsert(el, container, anchor)
   }
 
-  const unmount = vnode => {
+  const unmount = (vnode) => {
     // 删除旧节点
     hostRemoveElement(vnode.el)
   }
@@ -510,7 +511,7 @@ export function baseCreateRender(options: RendererOptions) {
       componentUpdateFn,
       () => {
         queuePreFlushCb(update)
-      }
+      },
     ))
     const update = (instance.update = () => effect.run())
     update()
@@ -570,6 +571,7 @@ export function baseCreateRender(options: RendererOptions) {
     container._vnode = vnode
   }
   return {
-    render
+    render,
+    createApp: createAppAPI(render),
   }
 }

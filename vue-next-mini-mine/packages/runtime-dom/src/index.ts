@@ -11,3 +11,8 @@ function ensureRender() {
 export const render = (...args) => {
   ensureRender().render(...args)
 }
+
+export const createApp = (...args) => {
+  const app = ensureRender().createApp(...args)
+  return app
+}
