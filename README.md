@@ -32,8 +32,8 @@ Vue3 从入门到实战 进阶式掌握完整知识体系
 
 ### 参数
 
---config xxx.xxx.json/js
--d/--debug 开始调试模式，终端显示所有日志
+- --config xxx.xxx.json/js
+- -d/--debug 开始调试模式，终端显示所有日志
 
 ### 涉及功能
 
