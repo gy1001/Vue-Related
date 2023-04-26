@@ -1,0 +1,14 @@
+{
+  "name": "samples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "imooc-build start --config imooc-build.config.json",
+    "dev:noconfig": "imooc-build start",
+    "dev:debug": "imooc-build start -d"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

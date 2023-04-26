@@ -1,0 +1,24 @@
+{
+  "name": "imooc-build",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "imooc-build": "./bin/imooc-build.js"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "commander": "^10.0.1",
+    "detect-port": "^1.5.1",
+    "fast-glob": "^3.2.12",
+    "inquirer": "^8.2.5",
+    "npmlog": "^7.0.1",
+    "semver": "^7.5.0"
+  }
+}
