@@ -73,15 +73,23 @@ function runServer(args = {}) {
 
 function onChange(eventName, path) {
   log.verbose('config file changed')
-  console.log('config fill changed-----')
+  log.info('config fill changed-----')
   child.kill()
   runServer(serverArgs)
 }
 
-function runWatcher() {
+function runWatcher(args) {
   // 启动配置监听服务
   // 使用三方库：chokidar
-  const configPath = getConfigFile()
+  let configPath
+  if (args.config) {
+    configPath = path.isAbsolute(args.config)
+      ? args.config
+      : path.resolve(args.config)
+  } else {
+    configPath = getConfigFile()
+  }
+  log.info('开始监听文件: ' + configPath)
   const watcher = chokidar
     // .watch(path.resolve(__dirname, '../start'))
     .watch(configPath)
@@ -93,12 +101,11 @@ function runWatcher() {
 }
 
 module.exports = function startServer(args, opts, cmd) {
-  console.log('start server')
   serverArgs = args
   // 1. 通过子进程启动一个 webpack-dev-server 服务
   // 1.1 子进程启动可以避免主进程收到影响
   // 1.2 子进程启动可以方便重启，解决修改配置后无法重启的问题
   runServer(args)
   // 2. 监听配置修改
-  runWatcher()
+  runWatcher(args)
 }
