@@ -91,7 +91,6 @@ function runWatcher() {
       process.exit(1)
     })
 }
-h
 
 module.exports = function startServer(args, opts, cmd) {
   console.log('start server')
