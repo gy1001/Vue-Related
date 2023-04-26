@@ -1,0 +1,22 @@
+{
+  "name": "imooc-ls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "mocha test/test.js",
+    "test:args": "mocha test/test.arg.js -la"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "imooc-ls": "./bin/index.js"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  }
+}
