@@ -1,0 +1,14 @@
+{
+  "entry": "./src/index.js",
+  "plugins": [],
+  "hooks": [
+    [
+      "start",
+      "./plugins/start.hook.js"
+    ],
+    [
+      "start",
+      "./plugins/start.hook.second.mjs"
+    ]
+  ]
+}

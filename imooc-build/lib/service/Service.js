@@ -3,7 +3,7 @@ const path = require('path')
 
 const fs = require('fs')
 const log = require('../../utils/log')
-const { getConfigFile } = require('../../utils')
+const { getConfigFile, loadMoudle } = require('../../utils')
 const { HOOK_START } = require('./const')
 const HOOKSARR = [HOOK_START]
 class Service {
@@ -15,7 +15,7 @@ class Service {
   }
   async start() {
     await this.resolveConfig()
-    this.registerHooks()
+    await this.registerHooks()
     this.emitHooks(HOOK_START)
   }
   // 解析配置文件
@@ -55,26 +55,29 @@ class Service {
   }
 
   // 注册钩子函数
-  registerHooks() {
+  async registerHooks() {
     log.verbose('解析hooks')
     // hooks 数据结构 [["int", function()],"success", function(){}]
     const { hooks } = this.config
-    hooks.forEach((hook) => {
+    for (const hook of hooks) {
       const [key, fn] = hook
       if (
         key &&
         HOOKSARR.indexOf(key) !== -1 &&
         fn &&
-        typeof key === 'string' &&
-        typeof fn === 'function'
+        typeof key === 'string'
       ) {
         const existHook = this.hooks[key]
         if (!existHook) {
           this.hooks[key] = []
         }
-        this.hooks[key].push(fn)
+        if (typeof fn === 'function') {
+          this.hooks[key].push(fn)
+        } else if (typeof fn === 'string') {
+          this.hooks[key].push(await loadMoudle(fn))
+        }
       }
-    })
+    }
     log.verbose('hooks', this.hooks)
   }
 
