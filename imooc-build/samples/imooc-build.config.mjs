@@ -5,9 +5,9 @@ export default {
   plugins: [],
   hooks: [
     [
-      'created',
+      'start',
       function () {
-        console.log('created')
+        console.log('start')
       },
     ],
     [
@@ -17,7 +17,6 @@ export default {
       },
     ],
   ],
-  // output: path.resolve('dist'),
 }
 
 // module.exports = {

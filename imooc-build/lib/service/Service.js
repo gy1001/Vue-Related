@@ -4,6 +4,8 @@ const path = require('path')
 const fs = require('fs')
 const log = require('../../utils/log')
 const { getConfigFile } = require('../../utils')
+const { HOOK_START } = require('./const')
+const HOOKSARR = [HOOK_START]
 class Service {
   constructor(opts) {
     this.args = opts
@@ -14,6 +16,7 @@ class Service {
   async start() {
     await this.resolveConfig()
     this.registerHooks()
+    this.emitHooks(HOOK_START)
   }
   // 解析配置文件
   async resolveConfig() {
@@ -58,7 +61,13 @@ class Service {
     const { hooks } = this.config
     hooks.forEach((hook) => {
       const [key, fn] = hook
-      if (key && fn && typeof key === 'string' && typeof fn === 'function') {
+      if (
+        key &&
+        HOOKSARR.indexOf(key) !== -1 &&
+        fn &&
+        typeof key === 'string' &&
+        typeof fn === 'function'
+      ) {
         const existHook = this.hooks[key]
         if (!existHook) {
           this.hooks[key] = []
@@ -67,6 +76,20 @@ class Service {
       }
     })
     log.verbose('hooks', this.hooks)
+  }
+
+  // 触发钩子函数
+  async emitHooks(key) {
+    const hook = this.hooks[key]
+    if (hook) {
+      for (const fn of hook) {
+        try {
+          await fn(this)
+        } catch (error) {
+          log.error(error)
+        }
+      }
+    }
   }
 }
 
