@@ -95,12 +95,13 @@ function runWatcher(args) {
     .watch(configPath)
     .on('change', onChange)
     .on('erro', (error) => {
-      console.error('file watch error!', error)
+      log.error('file watch error!:' + error)
       process.exit(1)
     })
 }
 
 module.exports = function startServer(args, opts, cmd) {
+  log.level = process.env.LOG_LEVEL
   serverArgs = args
   // 1. 通过子进程启动一个 webpack-dev-server 服务
   // 1.1 子进程启动可以避免主进程收到影响
