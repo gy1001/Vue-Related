@@ -117,6 +117,8 @@ class Service {
               mod: module,
               params: pluginParams,
             })
+          } else if (typeof plugin === 'function') {
+            this.plugins.push({ mode: plugin })
           }
         }
       }
