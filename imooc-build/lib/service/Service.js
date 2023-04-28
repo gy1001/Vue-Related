@@ -109,7 +109,14 @@ class Service {
         for (const plugin of plugins) {
           if (typeof plugin === 'string') {
             const module = await loadMoudle(plugin)
-            this.plugins.push(module)
+            this.plugins.push({ mod: module })
+          } else if (Array.isArray(plugin)) {
+            const [pluginPath, pluginParams] = plugin
+            const module = await loadMoudle(pluginPath)
+            this.plugins.push({
+              mod: module,
+              params: pluginParams,
+            })
           }
         }
       }
