@@ -1,6 +1,8 @@
 {
   "entry": "./src/index.js",
-  "plugins": [],
+  "plugins": [
+    "imooc-build-test"
+  ],
   "hooks": [
     [
       "start",

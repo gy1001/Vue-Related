@@ -11,12 +11,15 @@ class Service {
     this.args = opts
     this.config = {}
     this.hooks = {}
+    this.plugins = []
     // this.dir = process.cwd()
   }
   async start() {
     await this.resolveConfig()
     await this.registerHooks()
-    this.emitHooks(HOOK_START)
+    await this.emitHooks(HOOK_START)
+    await this.registerPlugin()
+    await this.runPlugin()
   }
   // 解析配置文件
   async resolveConfig() {
@@ -93,6 +96,29 @@ class Service {
         }
       }
     }
+  }
+  // 注册插件
+  // 支持的插件形式繁多
+  // 1. 数组形式：[[xxx, { xx: xxx}], "xxx"]
+  // 2. 也支持 前面是函数名，后面是具体的函数实现：[['xxx', function(){ }]]
+  // 3. 就是一个函数 [ function(){ }, ]
+  async registerPlugin() {
+    const { plugins } = this.config
+    if (plugins) {
+      if (Array.isArray(plugins)) {
+        for (const plugin of plugins) {
+          if (typeof plugin === 'string') {
+            const module = await loadMoudle(plugin)
+            this.plugins.push(module)
+          }
+        }
+      }
+    }
+  }
+
+  // 运行插件
+  async runPlugin() {
+    log.verbose('run plugins', this.plugins)
   }
 }
 

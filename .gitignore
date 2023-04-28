@@ -1,4 +1,6 @@
-node_modules
+imooc-build/node_modules
+imooc-ls/node_modules
+vue-next-mini-mine/node_modules
 .temp
 .cache
 dist
