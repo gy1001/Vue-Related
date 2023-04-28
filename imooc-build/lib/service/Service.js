@@ -15,6 +15,7 @@ class Service {
     this.hooks = {}
     this.plugins = []
     this.webpackConfig = new Config()
+    this.internalValue = {}
     // this.dir = process.cwd()
   }
   async start() {
@@ -99,7 +100,7 @@ class Service {
     //   JSON.stringify(this.webpackConfig.toConfig(), null, 2),
     // )
     this.webpackConfig.plugin('clean').use('webpack-chain', [{ root: '/dir' }])
-    log.verbose('webpack config', this.webpackConfig.toConfig())
+    // log.verbose('webpack config', this.webpackConfig.toConfig())
   }
 
   // 注册钩子函数
@@ -175,7 +176,35 @@ class Service {
 
   // 运行插件
   async runPlugin() {
-    log.verbose('run plugins', this.plugins)
+    for (const plugin of this.plugins) {
+      const API = {
+        chainWebpack: this.getWebpackConfig(),
+        emitHooks: this.emitHooks,
+        setValue: this.setValue,
+        getValue: this.getValue,
+        log,
+      }
+      const { mod, params } = plugin
+      if (!mod) {
+        continue
+      }
+      const options = {
+        ...params,
+      }
+      await mod(API, options)
+    }
+  }
+
+  getWebpackConfig() {
+    return this.webpackConfig
+  }
+
+  setValue(key, value) {
+    this.internalValue[key] = value
+  }
+
+  getValue(key) {
+    return this.internalValue[key]
   }
 }
 

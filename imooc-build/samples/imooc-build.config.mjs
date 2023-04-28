@@ -21,8 +21,8 @@ export default {
           c: 3,
         },
       ],
-      function pluginInner() {
-        console.log('this is a plugin inner func')
+      function pluginInner(api, params) {
+        console.log('this is a plugin inner func', api, params)
       },
     ]
   },
