@@ -9,6 +9,10 @@
     [
       "start",
       "./plugins/start.hook.second.mjs"
+    ],
+    [
+      "start",
+      "imooc-build-start-hook"
     ]
   ]
 }

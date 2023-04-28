@@ -12,9 +12,18 @@ function getConfigFile({ cwd = process.cwd() } = {}) {
 }
 
 async function loadMoudle(modulePath) {
-  const configPath = path.isAbsolute(modulePath)
-    ? modulePath
-    : path.resolve(modulePath)
+  let configPath
+  if (modulePath.indexOf('/') !== -1 || modulePath.indexOf('.') !== -1) {
+    // 说明他是一个路径
+    configPath = path.isAbsolute(modulePath)
+      ? modulePath
+      : path.resolve(modulePath)
+  } else {
+    // 它是一个包, 需要借助 require.resolve 来加载 运行命令目录下的 node_modules下的文件或者一层层往上找
+    configPath = require.resolve(modulePath, {
+      paths: [path.resolve(process.cwd())],
+    })
+  }
   if (fs.existsSync(configPath)) {
     const isJson = configPath.endsWith('.json')
     const isJs = configPath.endsWith('.js')
