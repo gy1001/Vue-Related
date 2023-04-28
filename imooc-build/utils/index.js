@@ -13,7 +13,7 @@ function getConfigFile({ cwd = process.cwd() } = {}) {
 
 async function loadMoudle(modulePath) {
   let configPath
-  if (modulePath.indexOf('/') !== -1 || modulePath.indexOf('.') !== -1) {
+  if (modulePath.startsWith('/') || modulePath.startsWith('.')) {
     // 说明他是一个路径
     configPath = path.isAbsolute(modulePath)
       ? modulePath
