@@ -103,8 +103,11 @@ class Service {
   // 2. 也支持 前面是函数名，后面是具体的函数实现：[['xxx', function(){ }]]
   // 3. 就是一个函数 [ function(){ }, ]
   async registerPlugin() {
-    const { plugins } = this.config
+    let { plugins } = this.config
     if (plugins) {
+      if (typeof plugins === 'function') {
+        plugins = plugins()
+      }
       if (Array.isArray(plugins)) {
         for (const plugin of plugins) {
           if (typeof plugin === 'string') {
