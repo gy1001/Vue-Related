@@ -1,7 +1,10 @@
 imooc-build/node_modules
 imooc-ls/node_modules
 vue-next-mini-mine/node_modules
+vue-ast/vue-ast/node_modules
+vue-mustache/node_modules
 .temp
 .cache
 dist
 .DS_Store
+vue-reactivity/node_modules
