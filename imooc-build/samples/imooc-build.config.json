@@ -8,6 +8,15 @@
         "a": 1,
         "b": 2
       }
+    ],
+    "./plugins/imooc-build-plugin-one.js",
+    [
+      "./plugins/imooc-build-plugin-one.js",
+      {
+        "a": 1,
+        "b": 2,
+        "c": 3
+      }
     ]
   ],
   "hooks": [
