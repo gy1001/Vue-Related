@@ -25,6 +25,7 @@ class Service {
     await this.emitHooks(HOOK_START)
     await this.registerPlugin()
     await this.runPlugin()
+    console.log('查看最后的webpackConfig', this.webpackConfig.toConfig())
   }
   // 解析配置文件
   async resolveConfig() {
@@ -178,10 +179,10 @@ class Service {
   async runPlugin() {
     for (const plugin of this.plugins) {
       const API = {
-        chainWebpack: this.getWebpackConfig(),
-        emitHooks: this.emitHooks,
-        setValue: this.setValue,
-        getValue: this.getValue,
+        getWebpackConfig: this.getWebpackConfig.bind(this),
+        emitHooks: this.emitHooks.bind(this),
+        setValue: this.setValue.bind(this),
+        getValue: this.getValue.bind(this),
         log,
       }
       const { mod, params } = plugin
