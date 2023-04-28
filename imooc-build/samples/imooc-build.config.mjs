@@ -22,7 +22,9 @@ export default {
         },
       ],
       function pluginInner(api, params) {
-        console.log('this is a plugin inner func', api, params)
+        const { getValue } = api
+        const value = getValue('name')
+        console.log(value)
       },
     ]
   },

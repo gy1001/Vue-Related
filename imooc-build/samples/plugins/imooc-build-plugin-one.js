@@ -1,5 +1,5 @@
 module.exports = function startPluginFirst(api, params) {
-  const { getWebpackConfig } = api
+  const { getWebpackConfig, setValue } = api
   const config = getWebpackConfig()
   config
     .entry('index2')
@@ -7,4 +7,11 @@ module.exports = function startPluginFirst(api, params) {
     .end()
     .output.filename('[name].bundle.js')
     .path('dist')
+  setValue('name', {
+    name: '孙悟空',
+    value: '123456',
+    fn: function () {
+      return 'test'
+    },
+  })
 }
