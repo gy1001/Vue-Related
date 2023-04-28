@@ -25,7 +25,7 @@ class Service {
     await this.emitHooks(HOOK_START)
     await this.registerPlugin()
     await this.runPlugin()
-    console.log('查看最后的webpackConfig', this.webpackConfig.toConfig())
+    // console.log('查看最后的webpackConfig', this.webpackConfig.toConfig())
   }
   // 解析配置文件
   async resolveConfig() {
@@ -168,7 +168,7 @@ class Service {
               params: pluginParams,
             })
           } else if (typeof plugin === 'function') {
-            this.plugins.push({ mode: plugin })
+            this.plugins.push({ mod: plugin })
           }
         }
       }
