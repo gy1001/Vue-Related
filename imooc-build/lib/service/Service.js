@@ -71,10 +71,34 @@ class Service {
       .output.path('dist')
       .filename('[name].bundle.js')
     const entry = this.webpackConfig.entry('index')
-    console.log(entry)
     entry.clear()
     entry.add('src/main.js').add('src/bundle.js')
-
+    if (entry.has('src/main.js')) {
+      entry.delete('src/main.js')
+    }
+    this.webpackConfig.module
+      .rule('lint')
+      .test('/.js$/')
+      .include.add('src')
+      .end()
+      .exclude.add('node_modules')
+      .end()
+      .use('eslint')
+      .loader('eslint-loader')
+      .options({
+        rules: {
+          semi: 'off',
+        },
+      })
+    // const lintRule = this.webpackConfig.module.rule('lint') // 注意这个名字和前面一致
+    // lintRule.include.clear()
+    // lintRule.exclude.clear()
+    // lintRule.uses.clear()
+    // log.verbose(
+    //   'webpack config',
+    //   JSON.stringify(this.webpackConfig.toConfig(), null, 2),
+    // )
+    this.webpackConfig.plugin('clean').use('webpack-chain', [{ root: '/dir' }])
     log.verbose('webpack config', this.webpackConfig.toConfig())
   }
 
