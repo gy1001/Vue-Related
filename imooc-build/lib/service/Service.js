@@ -6,16 +6,20 @@ const log = require('../../utils/log')
 const { getConfigFile, loadMoudle } = require('../../utils')
 const { HOOK_START } = require('./const')
 const HOOKSARR = [HOOK_START]
+const Config = require('webpack-chain')
+
 class Service {
   constructor(opts) {
     this.args = opts
     this.config = {}
     this.hooks = {}
     this.plugins = []
+    this.webpackConfig = new Config()
     // this.dir = process.cwd()
   }
   async start() {
     await this.resolveConfig()
+    await this.registerWebpackConfig()
     await this.registerHooks()
     await this.emitHooks(HOOK_START)
     await this.registerPlugin()
@@ -55,6 +59,23 @@ class Service {
       console.log('配置文件不存在，终止执行')
       process.exit(1)
     }
+  }
+
+  // 注册webpack 配置
+  registerWebpackConfig() {
+    // entry: { inedx: "index.js" }
+    this.webpackConfig
+      .entry('index')
+      .add('src/index.js')
+      .end()
+      .output.path('dist')
+      .filename('[name].bundle.js')
+    const entry = this.webpackConfig.entry('index')
+    console.log(entry)
+    entry.clear()
+    entry.add('src/main.js').add('src/bundle.js')
+
+    log.verbose('webpack config', this.webpackConfig.toConfig())
   }
 
   // 注册钩子函数

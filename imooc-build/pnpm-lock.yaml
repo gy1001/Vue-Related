@@ -22,6 +22,9 @@ devDependencies:
   semver:
     specifier: ^7.5.0
     version: 7.5.0
+  webpack-chain:
+    specifier: ^6.5.1
+    version: 6.5.1
 
 packages:
 
@@ -221,6 +224,11 @@ packages:
       ms: 2.1.2
     dev: true
 
+  /deepmerge@1.5.2:
+    resolution: {integrity: sha1-EEmdhohEza1P7ghC34x/bwyVp1M=}
+    engines: {node: '>=0.10.0'}
+    dev: true
+
   /defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
     dependencies:
@@ -411,6 +419,10 @@ packages:
   /is-unicode-supported@0.1.0:
     resolution: {integrity: sha1-PybHaoCVk7Ur+i7LVxDtJ3m1Iqc=}
     engines: {node: '>=10'}
+    dev: true
+
+  /javascript-stringify@2.1.0:
+    resolution: {integrity: sha1-J8dlOb4U2L0Sghmi1zGwkzeQTnk=}
     dev: true
 
   /lodash@4.17.21:
@@ -658,6 +670,14 @@ packages:
     resolution: {integrity: sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=}
     dependencies:
       defaults: 1.0.4
+    dev: true
+
+  /webpack-chain@6.5.1:
+    resolution: {integrity: sha1-TycoTLu2N+PI+970Pu9YjU2GEgY=}
+    engines: {node: '>=8'}
+    dependencies:
+      deepmerge: 1.5.2
+      javascript-stringify: 2.1.0
     dev: true
 
   /wide-align@1.1.5:
