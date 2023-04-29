@@ -22,9 +22,10 @@ export default {
         },
       ],
       function pluginInner(api, params) {
-        const { getValue } = api
+        const { getValue, emitHooks, log } = api
         const value = getValue('name')
-        console.log(value)
+        log.verbose(JSON.stringify(value))
+        emitHooks('pluginHook')
       },
     ]
   },
@@ -33,6 +34,13 @@ export default {
       'start',
       function () {
         console.log('start')
+      },
+    ],
+    [
+      'pluginHook',
+      ({ log, webpackConfig }) => {
+        log.warn('this is plugin hook')
+        log.info('pluginHook', webpackConfig.toConfig())
       },
     ],
   ],

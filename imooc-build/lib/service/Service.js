@@ -4,8 +4,8 @@ const path = require('path')
 const fs = require('fs')
 const log = require('../../utils/log')
 const { getConfigFile, loadMoudle } = require('../../utils')
-const { HOOK_START } = require('./const')
-const HOOKSARR = [HOOK_START]
+const { HOOK_START, PLUGIN_HOOK } = require('./const')
+const HOOKSARR = [HOOK_START, PLUGIN_HOOK]
 const Config = require('webpack-chain')
 
 class Service {
@@ -16,6 +16,7 @@ class Service {
     this.plugins = []
     this.webpackConfig = new Config()
     this.internalValue = {}
+    this.log = log
     // this.dir = process.cwd()
   }
   async start() {
