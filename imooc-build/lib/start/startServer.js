@@ -6,7 +6,7 @@ const { getConfigFile } = require('../../utils')
 let child
 let serverArgs
 function runServer(args = {}) {
-  const { config = '' } = args
+  const { config = '', customWebpackPath = '' } = args
   // 启动 webpack 服务
   // 启动子进程的方式
   // console.log('pid', process.pid)
@@ -54,7 +54,11 @@ function runServer(args = {}) {
 
   // 第四种：fork
   const srciprtPath = path.resolve(__dirname, './devService.js')
-  const configParams = ['--port 8080', '--config ' + config]
+  const configParams = [
+    '--port 8080',
+    '--config ' + config,
+    '--customWebpackPath ' + customWebpackPath,
+  ]
   child = cp.fork(srciprtPath, configParams)
   // child.on('message', (data) => {
   // 接收来自子进程中的消息

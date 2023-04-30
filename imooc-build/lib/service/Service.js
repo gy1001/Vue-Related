@@ -17,6 +17,7 @@ class Service {
     this.webpackConfig = new Config()
     this.internalValue = {}
     this.log = log
+    this.webpack = ''
     // this.dir = process.cwd()
   }
   async start() {
@@ -26,8 +27,30 @@ class Service {
     await this.emitHooks(HOOK_START)
     await this.registerPlugin()
     await this.runPlugin()
-    // console.log('查看最后的webpackConfig', this.webpackConfig.toConfig())
+    await this.initWebpack()
+    log.verbose('this.webpack', this.webpack)
   }
+
+  async initWebpack() {
+    // 从 config 中获取 CustomeWebpackPath 属性
+    // CustomeWebpackPath存在shi，则使用改地址应用 webpack
+    // 否则则使用 node_modules 中的 webapack
+    const { customWebpackPath } = this.args
+    if (customWebpackPath) {
+      if (fs.existsSync(customWebpackPath)) {
+        let p = customWebpackPath
+        if (!path.isAbsolute(p)) {
+          p = path.resolve(p)
+        }
+        this.webpack = require.resolve(p)
+      }
+    } else {
+      this.webpack = require.resolve('webpack', {
+        paths: [path.resolve(process.cwd(), 'node_modules')],
+      })
+    }
+  }
+
   // 解析配置文件
   async resolveConfig() {
     log.verbose('解析配置文件', this.args)

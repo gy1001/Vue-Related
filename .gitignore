@@ -8,3 +8,4 @@ vue-mustache/node_modules
 dist
 .DS_Store
 vue-reactivity/node_modules
+imooc-build/samples/node_modules
