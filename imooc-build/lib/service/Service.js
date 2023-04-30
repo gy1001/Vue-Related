@@ -7,6 +7,7 @@ const { getConfigFile, loadMoudle } = require('../../utils')
 const { HOOK_START, PLUGIN_HOOK } = require('./const')
 const HOOKSARR = [HOOK_START, PLUGIN_HOOK]
 const Config = require('webpack-chain')
+const InitPlugin = require('../../plugins/initPlugin/index')
 
 class Service {
   constructor(opts) {
@@ -28,7 +29,9 @@ class Service {
     await this.registerPlugin()
     await this.runPlugin()
     await this.initWebpack()
-    log.verbose('this.webpack', this.webpack)
+    //完成 webpack 配置（借助plugin webpack.config.js）
+    // 完成 webpack-dev-server 的启动
+    // log.verbose('this.webpack', this.webpack)
   }
 
   async initWebpack() {
@@ -175,6 +178,12 @@ class Service {
   // 3. 就是一个函数 [ function(){ }, ]
   async registerPlugin() {
     let { plugins } = this.config
+    const buildInPlugins = [InitPlugin]
+    buildInPlugins.forEach((buildPlugin) => {
+      this.plugins.push({
+        mod: buildPlugin,
+      })
+    })
     if (plugins) {
       if (typeof plugins === 'function') {
         plugins = plugins()

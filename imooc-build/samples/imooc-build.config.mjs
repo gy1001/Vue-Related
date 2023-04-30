@@ -40,7 +40,7 @@ export default {
       'pluginHook',
       ({ log, webpackConfig }) => {
         log.warn('this is plugin hook')
-        log.info('pluginHook', webpackConfig.toConfig())
+        // log.info('pluginHook', webpackConfig.toConfig())
       },
     ],
   ],
