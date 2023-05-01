@@ -9,3 +9,4 @@ dist
 .DS_Store
 vue-reactivity/node_modules
 imooc-build/samples/node_modules
+vue-snabbdom/node_modules
