@@ -234,7 +234,37 @@ class Service {
     try {
       const selfWebapck = require(this.webpack)
       const webpackConfig = this.webpackConfig.toConfig()
-      selfWebapck(webpackConfig, (err, stats) => {})
+      compiler = selfWebapck(webpackConfig, (err, stats) => {
+        if (err) {
+          log.error('ERROR!', err)
+        } else {
+          const result = stats.toJson({
+            all: false,
+            errors: true,
+            warnings: true,
+            timings: true,
+          })
+          if (result.errors && result.errors.length > 0) {
+            log.error('COMPILE ERROR')
+            result.errors.forEach((error) => {
+              log.error('ERROR MESSAGE: ', error.message)
+            })
+          } else if (result.warnings && result.warnings.length > 0) {
+            log.warn('COMPILE WARNING')
+            result.warnings.forEach((warning) => {
+              log.warn('WARNING MESSAGE: ', warning.message)
+            })
+          } else {
+            log.info(
+              'COMPILE SUCCESSFULLY!',
+              'Compile finish in ' + result.time / 1000 + 's',
+            )
+          }
+        }
+      })
+      compiler.hooks.done.tap('compileHook', () => {
+        console.log('done!!!')
+      })
     } catch (error) {
       log.error('service startServer', error)
     }
