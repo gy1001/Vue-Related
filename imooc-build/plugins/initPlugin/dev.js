@@ -4,8 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webapck = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = function initPlugin(api, params) {
   console.log('init plugin')
@@ -107,10 +105,6 @@ module.exports = function initPlugin(api, params) {
         },
       },
     })
-  config.optimization
-    .minimizer('UglifyJsPlugin')
-    .use(UglifyJsPlugin, [{ sourceMap: false }])
-  config.optimization.minimizer('CssMinimizerPlugin').use(CssMinimizerPlugin)
   //配置监听函数
   config.watch(true)
 }

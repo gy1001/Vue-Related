@@ -6,7 +6,9 @@ const { getConfigFile, loadMoudle } = require('../../utils')
 const { HOOK_START, PLUGIN_HOOK } = require('./const')
 const HOOKSARR = [HOOK_START, PLUGIN_HOOK]
 const Config = require('webpack-chain')
-const InitPlugin = require('../../plugins/initPlugin/index')
+// const InitPlugin = require('../../plugins/initPlugin/index')
+const InitDevPlugin = require('../../plugins/initPlugin/dev')
+const InitBuildPlugin = require('../../plugins/initPlugin/build')
 const WebpackDevServer = require('webpack-dev-server')
 
 class Service {
@@ -179,7 +181,8 @@ class Service {
   // 3. 就是一个函数 [ function(){ }, ]
   async registerPlugin() {
     let { plugins } = this.config
-    const buildInPlugins = [InitPlugin]
+    const buildInPlugins =
+      this.args === 'start' ? [InitDevPlugin] : [InitBuildPlugin]
     buildInPlugins.forEach((buildPlugin) => {
       this.plugins.push({
         mod: buildPlugin,

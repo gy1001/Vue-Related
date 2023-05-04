@@ -46,7 +46,7 @@ const Service = require('../service/Service')
       config,
       customWebpackPath: paramObj.customWebpackPath || '',
     }
-    const service = new Service(args)
+    const service = new Service('start', args)
     service.start()
     // const net = require('net')
     // const tcpServer = new net.Server()

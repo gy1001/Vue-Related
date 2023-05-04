@@ -111,6 +111,4 @@ module.exports = function initPlugin(api, params) {
     .minimizer('UglifyJsPlugin')
     .use(UglifyJsPlugin, [{ sourceMap: false }])
   config.optimization.minimizer('CssMinimizerPlugin').use(CssMinimizerPlugin)
-  //配置监听函数
-  config.watch(true)
 }
