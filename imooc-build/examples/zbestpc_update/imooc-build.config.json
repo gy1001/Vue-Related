@@ -1,0 +1,5 @@
+{
+  "plugins": [
+    "./plugins/zbestpc-plugin.js"
+  ]
+}
