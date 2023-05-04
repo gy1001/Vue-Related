@@ -7,12 +7,14 @@
     "dev": "imooc-build start --config imooc-build.config.json",
     "dev:noconfig": "imooc-build start",
     "dev:debug": "imooc-build start -d",
-    "dev:debug_custome_webpack": "imooc-build start -d --custom-webpack-path /usr/local/bin/webpack"
+    "dev:debug_custome_webpack": "imooc-build start -d --custom-webpack-path /usr/local/bin/webpack",
+    "dev:env": "cross-env IMOOC_BUILD_MODE=production imooc-build start -d"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "webpack": "^5.81.0"
   }
 }
