@@ -7,6 +7,7 @@ const { HOOK_START, PLUGIN_HOOK } = require('./const')
 const HOOKSARR = [HOOK_START, PLUGIN_HOOK]
 const Config = require('webpack-chain')
 const InitPlugin = require('../../plugins/initPlugin/index')
+const WebpackDevServer = require('webpack-dev-server')
 
 class Service {
   constructor(opts) {
@@ -231,39 +232,59 @@ class Service {
 
   async startServer() {
     let compiler
+    let devServer
+    let serverConfig
     try {
       const selfWebapck = require(this.webpack)
       const webpackConfig = this.webpackConfig.toConfig()
-      compiler = selfWebapck(webpackConfig, (err, stats) => {
-        if (err) {
-          log.error('ERROR!', err)
-        } else {
-          const result = stats.toJson({
-            all: false,
-            errors: true,
-            warnings: true,
-            timings: true,
-          })
-          if (result.errors && result.errors.length > 0) {
-            log.error('COMPILE ERROR')
-            result.errors.forEach((error) => {
-              log.error('ERROR MESSAGE: ', error.message)
-            })
-          } else if (result.warnings && result.warnings.length > 0) {
-            log.warn('COMPILE WARNING')
-            result.warnings.forEach((warning) => {
-              log.warn('WARNING MESSAGE: ', warning.message)
-            })
-          } else {
-            log.info(
-              'COMPILE SUCCESSFULLY!',
-              'Compile finish in ' + result.time / 1000 + 's',
-            )
-          }
-        }
-      })
+      compiler = selfWebapck(
+        webpackConfig,
+        // (err, stats) => {
+        //     if (err) {
+        //       log.error('ERROR!', err)
+        //     } else {
+        //       const result = stats.toJson({
+        //         all: false,
+        //         errors: true,
+        //         warnings: true,
+        //         timings: true,
+        //       })
+        //       if (result.errors && result.errors.length > 0) {
+        //         log.error('COMPILE ERROR')
+        //         result.errors.forEach((error) => {
+        //           log.error('ERROR MESSAGE: ', error.message)
+        //         })
+        //       } else if (result.warnings && result.warnings.length > 0) {
+        //         log.warn('COMPILE WARNING')
+        //         result.warnings.forEach((warning) => {
+        //           log.warn('WARNING MESSAGE: ', warning.message)
+        //         })
+        //       } else {
+        //         log.info(
+        //           'COMPILE SUCCESSFULLY!',
+        //           'Compile finish in ' + result.time / 1000 + 's',
+        //         )
+        //       }
+        //     }
+        // }
+      )
       compiler.hooks.done.tap('compileHook', () => {
         console.log('done!!!')
+      })
+      serverConfig = {
+        port: this.args.port || 9002,
+        host: this.args.host || '0.0.0.0',
+        https: this.args.https || false,
+        open: true,
+      }
+      devServer = new WebpackDevServer(serverConfig, compiler)
+      devServer.startCallback((err) => {
+        if (err) {
+          log.error('WEBPACK-DEV-SERVER ERROR!!!')
+          log.error('ERROR MESSAGE', err.toString())
+        } else {
+          log.info('WEBPACK-DEV-SERVER LANCH SUCCESSFULLY')
+        }
       })
     } catch (error) {
       log.error('service startServer', error)
