@@ -88,7 +88,7 @@ class Service {
       }
       this.config = configParams
     } else {
-      console.log('配置文件不存在，终止执行')
+      log.error('配置文件不存在，终止执行')
       process.exit(1)
     }
   }
@@ -138,7 +138,7 @@ class Service {
   async registerHooks() {
     log.verbose('解析hooks')
     // hooks 数据结构 [["int", function()],"success", function(){}]
-    const { hooks } = this.config
+    const { hooks = [] } = this.config
     for (const hook of hooks) {
       const [key, fn] = hook
       if (

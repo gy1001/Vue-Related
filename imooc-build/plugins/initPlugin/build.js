@@ -2,7 +2,7 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webapck = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
@@ -45,15 +45,6 @@ module.exports = function initPlugin(api, params) {
   // .generator({
   //   filename: 'img/[name].[contenthash:6][ext]', // 解决重名问题
   // })
-  config.module
-    .rule('ejs')
-    .exclude.add(/node_modules/)
-    .end()
-    .test(/\.ejs$/)
-    .use('ejs-loader')
-    .options({
-      esModule: false,
-    })
   // 配置 plugins
   config.plugin('MiniCssExtractPlugin').use(MiniCssExtractPlugin, [
     {
@@ -61,33 +52,14 @@ module.exports = function initPlugin(api, params) {
       chunkFilename: 'css/[name].chunk.css',
     },
   ])
-  config.plugin('indexHtml').use(HtmlWebpackPlugin, [
+  config.plugin('index').use(HtmlWebpackPlugin, [
     {
       filename: 'index.html',
       template: path.resolve(dir, './public/index.html'),
       chunks: ['index'],
     },
   ])
-  config.plugin('loginHtml').use(HtmlWebpackPlugin, [
-    {
-      filename: 'login.html',
-      template: path.resolve(dir, './public/index.html'),
-      chunks: ['login'],
-    },
-  ])
-  config
-    .plugin('provide')
-    .use(webapck.ProvidePlugin, [{ $: 'jquery', jQuery: 'jquery' }])
-  config.plugin('CopyWebpackPlugin').use(CopyWebpackPlugin, [
-    {
-      patterns: [
-        {
-          from: path.resolve(dir, './src/img'),
-          to: path.resolve(dir, './dist/img'),
-        },
-      ],
-    },
-  ])
+
   config.plugin('cleanWebpack').use(CleanWebpackPlugin, [])
 
   // 配置 optimization
