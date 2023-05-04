@@ -280,7 +280,7 @@ class Service {
         port: this.args.port || 9002,
         host: this.args.host || '0.0.0.0',
         https: this.args.https || false,
-        open: true,
+        ...webpackConfig.devServer,
       }
       devServer = new WebpackDevServer(serverConfig, compiler)
       devServer.startCallback((err) => {
