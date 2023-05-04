@@ -32,7 +32,7 @@ class Service {
     //完成 webpack 配置（借助plugin webpack.config.js）
     // 完成 webpack-dev-server 的启动
     // log.verbose('this.webpack', this.webpack)
-    log.verbose('webpack config', this.webpackConfig.toConfig().module.rules)
+    log.verbose('webpack config plugins', this.webpackConfig.toConfig().plugins)
   }
 
   async initWebpack() {
