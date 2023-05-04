@@ -32,6 +32,7 @@ class Service {
     //完成 webpack 配置（借助plugin webpack.config.js）
     // 完成 webpack-dev-server 的启动
     // log.verbose('this.webpack', this.webpack)
+    log.verbose('webpack config', this.webpackConfig.toConfig())
   }
 
   async initWebpack() {
@@ -93,32 +94,32 @@ class Service {
   // 注册webpack 配置
   registerWebpackConfig() {
     // entry: { inedx: "index.js" }
-    this.webpackConfig
-      .entry('index')
-      .add('src/index.js')
-      .end()
-      .output.path('dist')
-      .filename('[name].bundle.js')
-    const entry = this.webpackConfig.entry('index')
-    entry.clear()
-    entry.add('src/main.js').add('src/bundle.js')
-    if (entry.has('src/main.js')) {
-      entry.delete('src/main.js')
-    }
-    this.webpackConfig.module
-      .rule('lint')
-      .test('/.js$/')
-      .include.add('src')
-      .end()
-      .exclude.add('node_modules')
-      .end()
-      .use('eslint')
-      .loader('eslint-loader')
-      .options({
-        rules: {
-          semi: 'off',
-        },
-      })
+    // this.webpackConfig
+    //   .entry('index')
+    //   .add('src/index.js')
+    //   .end()
+    //   .output.path('dist')
+    //   .filename('[name].bundle.js')
+    // const entry = this.webpackConfig.entry('index')
+    // entry.clear()
+    // entry.add('src/main.js').add('src/bundle.js')
+    // if (entry.has('src/main.js')) {
+    //   entry.delete('src/main.js')
+    // }
+    // this.webpackConfig.module
+    //   .rule('lint')
+    //   .test('/.js$/')
+    //   .include.add('src')
+    //   .end()
+    //   .exclude.add('node_modules')
+    //   .end()
+    //   .use('eslint')
+    //   .loader('eslint-loader')
+    //   .options({
+    //     rules: {
+    //       semi: 'off',
+    //     },
+    //   })
     // const lintRule = this.webpackConfig.module.rule('lint') // 注意这个名字和前面一致
     // lintRule.include.clear()
     // lintRule.exclude.clear()
@@ -127,7 +128,7 @@ class Service {
     //   'webpack config',
     //   JSON.stringify(this.webpackConfig.toConfig(), null, 2),
     // )
-    this.webpackConfig.plugin('clean').use('webpack-chain', [{ root: '/dir' }])
+    // this.webpackConfig.plugin('clean').use('webpack-chain', [{ root: '/dir' }])
     // log.verbose('webpack config', this.webpackConfig.toConfig())
   }
 
