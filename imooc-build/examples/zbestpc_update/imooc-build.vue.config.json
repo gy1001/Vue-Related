@@ -1,5 +1,6 @@
 {
   "plugins": [
-    "./plugins/zbestpc-vue-plugin.js"
+    "./plugins/zbestpc-vue-plugin.js",
+    "./plugins/imooc-build-vue-plugin.js"
   ]
 }

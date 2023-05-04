@@ -1,7 +1,6 @@
 const path = require('path')
 const dir = process.cwd()
 const webpack = require('webpack')
-const { VueLoaderPlugin } = require('vue-loader')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -27,13 +26,6 @@ module.exports = function (api, params) {
     .options({
       esModule: false,
     })
-  config.module
-    .rule('vue')
-    .exclude.add(/node_modules/)
-    .end()
-    .test(/\.vue$/)
-    .use('vue-loader')
-    .loader('vue-loader')
 
   config
     .plugin('provide')
@@ -50,7 +42,6 @@ module.exports = function (api, params) {
     },
   ])
 
-  config.plugin('VueLoaderPlugin').use(VueLoaderPlugin)
   config.devServer
     .compress(true)
     .proxy({
