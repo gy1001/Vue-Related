@@ -12,7 +12,8 @@ const InitBuildPlugin = require('../../plugins/initPlugin/build')
 const WebpackDevServer = require('webpack-dev-server')
 
 class Service {
-  constructor(opts) {
+  constructor(cmd, opts) {
+    this.cmd = ''
     this.args = opts
     this.config = {}
     this.hooks = {}
@@ -63,6 +64,7 @@ class Service {
     log.info('解析配置文件', this.args)
     const { config } = this.args
     let configPath = config
+
     if (config) {
       if (path.isAbsolute(config)) {
         configPath = config
@@ -182,7 +184,7 @@ class Service {
   async registerPlugin() {
     let { plugins } = this.config
     const buildInPlugins =
-      this.args === 'start' ? [InitDevPlugin] : [InitBuildPlugin]
+      this.cmd === 'start' ? [InitDevPlugin] : [InitBuildPlugin]
     buildInPlugins.forEach((buildPlugin) => {
       this.plugins.push({
         mod: buildPlugin,
