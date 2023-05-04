@@ -1,1 +1,1 @@
-console.log('hello imooc-build test project')
+console.log('i am index.js')

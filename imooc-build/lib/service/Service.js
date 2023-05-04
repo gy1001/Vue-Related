@@ -1,6 +1,5 @@
 // const DEFAULT_CONFIG_NAME = ['imooc-build.config.+(json|mjs|js)']
 const path = require('path')
-
 const fs = require('fs')
 const log = require('../../utils/log')
 const { getConfigFile, loadMoudle } = require('../../utils')
@@ -29,13 +28,10 @@ class Service {
     await this.registerPlugin()
     await this.runPlugin()
     await this.initWebpack()
+    await this.startServer()
     //完成 webpack 配置（借助plugin webpack.config.js）
     // 完成 webpack-dev-server 的启动
     // log.verbose('this.webpack', this.webpack)
-    log.verbose(
-      'webpack config optimization',
-      this.webpackConfig.toConfig().optimization,
-    )
   }
 
   async initWebpack() {
@@ -230,6 +226,17 @@ class Service {
         ...params,
       }
       await mod(API, options)
+    }
+  }
+
+  async startServer() {
+    let compiler
+    try {
+      const selfWebapck = require(this.webpack)
+      const webpackConfig = this.webpackConfig.toConfig()
+      selfWebapck(webpackConfig, (err, stats) => {})
+    } catch (error) {
+      log.error('service startServer', error)
     }
   }
 

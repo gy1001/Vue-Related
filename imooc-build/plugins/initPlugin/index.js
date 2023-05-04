@@ -17,7 +17,7 @@ module.exports = function initPlugin(api, params) {
   // 设置 entry
   const dir = process.cwd()
   config.entry('index').add(path.resolve(dir, './src/index.js'))
-  config.output.filename('js/[name].js').path(path.resolve(dir, '../dist'))
+  config.output.filename('js/[name].js').path(path.resolve(dir, './dist'))
   // 配置 module
   config.module
     .rule('css')
@@ -64,14 +64,14 @@ module.exports = function initPlugin(api, params) {
   config.plugin('indexHtml').use(HtmlWebpackPlugin, [
     {
       filename: 'index.html',
-      template: path.resolve(dir, './public/index-vue.html'),
-      chunks: ['home'],
+      template: path.resolve(dir, './public/index.html'),
+      chunks: ['index'],
     },
   ])
   config.plugin('loginHtml').use(HtmlWebpackPlugin, [
     {
       filename: 'login.html',
-      template: path.resolve(dir, './public/index-vue.html'),
+      template: path.resolve(dir, './public/index.html'),
       chunks: ['login'],
     },
   ])
