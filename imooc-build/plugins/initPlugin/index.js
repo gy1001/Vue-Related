@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webapck = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = function initPlugin(api, params) {
   console.log('init plugin')
@@ -87,4 +89,26 @@ module.exports = function initPlugin(api, params) {
     },
   ])
   config.plugin('cleanWebpack').use(CleanWebpackPlugin, [])
+
+  // 配置 optimization
+  config.optimization
+    .minimize(true)
+    .usedExports(true)
+    .splitChunks({
+      chunks: 'all',
+      minSize: 300 * 1024,
+      name: 'common',
+      automaticNameDelimiter: '_',
+      cacheGroups: {
+        jquery: {
+          name: 'jquery',
+          test: /jquery/,
+          chunks: 'all',
+        },
+      },
+    })
+  config.optimization
+    .minimizer('UglifyJsPlugin')
+    .use(UglifyJsPlugin, [{ sourceMap: false }])
+  config.optimization.minimizer('CssMinimizerPlugin').use(CssMinimizerPlugin)
 }
