@@ -13,7 +13,7 @@ const WebpackDevServer = require('webpack-dev-server')
 
 class Service {
   constructor(cmd, opts) {
-    this.cmd = ''
+    this.cmd = cmd
     this.args = opts
     this.config = {}
     this.hooks = {}
@@ -31,11 +31,13 @@ class Service {
     await this.emitHooks(HOOK_START)
     await this.registerPlugin()
     await this.runPlugin()
-    await this.initWebpack()
-    await this.startServer()
-    //完成 webpack 配置（借助plugin webpack.config.js）
-    // 完成 webpack-dev-server 的启动
-    // log.verbose('this.webpack', this.webpack)
+    if (!this.args.stopServer) {
+      await this.initWebpack()
+      await this.startServer()
+      //完成 webpack 配置（借助plugin webpack.config.js）
+      // 完成 webpack-dev-server 的启动
+      // log.verbose('this.webpack', this.webpack)
+    }
   }
 
   async initWebpack() {
@@ -52,8 +54,12 @@ class Service {
         this.webpack = require.resolve(p)
       }
     } else {
+      console.log('process.cwd()', process.cwd())
       this.webpack = require.resolve('webpack', {
-        paths: [path.resolve(process.cwd(), 'node_modules')],
+        paths: [
+          path.resolve(process.cwd(), 'node_modules'),
+          path.resolve(__dirname, 'node_modules'),
+        ],
       })
     }
   }

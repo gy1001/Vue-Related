@@ -45,6 +45,7 @@ const Service = require('../service/Service')
       port: newPort,
       config,
       customWebpackPath: paramObj.customWebpackPath || '',
+      stopServer: paramObj['stop-server'],
     }
     const service = new Service('start', args)
     service.start()
