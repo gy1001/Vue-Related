@@ -1,3 +1,3 @@
-import utils from './utils.js'
+import utils from './utils'
 console.log('hello vite')
 utils()
