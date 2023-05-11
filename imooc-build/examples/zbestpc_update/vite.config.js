@@ -1,8 +1,6 @@
 /* eslint-disable */
 import legacyPlugin from '@vitejs/plugin-legacy'
-import * as path from 'path'
 import vuePlugin from '@vitejs/plugin-vue'
-// import inject from 'rollup-plugin-inject'
 import inject from '@rollup/plugin-inject'
 import { createHtmlPlugin } from 'vite-plugin-html'
 // @see https://cn.vitejs.dev/config/
@@ -39,7 +37,7 @@ export default ({ command, mode }) => {
       minify: 'terser', // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
       manifest: false, // 是否产出maifest.json
       sourcemap: false, // 是否产出soucemap.json
-      outDir: 'build', // 产出目录
+      outDir: 'dist', // 产出目录
       rollupOptions,
     },
     esbuild,
@@ -63,7 +61,8 @@ export default ({ command, mode }) => {
       createHtmlPlugin({
         entry: 'src/index.js',
         filname: 'index.html',
-        template: 'public/index.html',
+        // template: 'public/index.html',
+        template: 'index-vite.html',
       }),
     ],
     css: {
