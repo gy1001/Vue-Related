@@ -4,6 +4,7 @@ import * as path from 'path'
 import vuePlugin from '@vitejs/plugin-vue'
 // import inject from 'rollup-plugin-inject'
 import inject from '@rollup/plugin-inject'
+import { createHtmlPlugin } from 'vite-plugin-html'
 // @see https://cn.vitejs.dev/config/
 export default ({ command, mode }) => {
   let rollupOptions = {}
@@ -58,6 +59,11 @@ export default ({ command, mode }) => {
       inject({
         $: 'jquery',
         jQuery: 'jquery',
+      }),
+      createHtmlPlugin({
+        entry: 'src/index.js',
+        filname: 'index.html',
+        template: 'public/index.html',
       }),
     ],
     css: {
