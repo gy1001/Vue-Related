@@ -1,17 +1,13 @@
 /* eslint-disable */
-import legacyPlugin from '@vitejs/plugin-legacy';
-import * as path from 'path';
-import vuePlugin from '@vitejs/plugin-vue';
+import legacyPlugin from '@vitejs/plugin-legacy'
+import * as path from 'path'
+import vuePlugin from '@vitejs/plugin-vue'
+import inject from 'rollup-plugin-inject'
 // @see https://cn.vitejs.dev/config/
-export default ({
-  command,
-  mode
-}) => {
-  let rollupOptions = {};
+export default ({ command, mode }) => {
+  let rollupOptions = {}
 
-
-  let optimizeDeps = {};
-
+  let optimizeDeps = {}
 
   let alias = {}
 
@@ -19,7 +15,8 @@ export default ({
 
   // todo 替换为原有变量
   let define = {
-    'process.env.NODE_ENV': command === 'serve' ? '"development"' : '"production"',
+    'process.env.NODE_ENV':
+      command === 'serve' ? '"development"' : '"production"',
   }
 
   let esbuild = {}
@@ -47,8 +44,20 @@ export default ({
     optimizeDeps,
     plugins: [
       legacyPlugin({
-        targets: ['Android > 39', 'Chrome >= 60', 'Safari >= 10.1', 'iOS >= 10.3', 'Firefox >= 54', 'Edge >= 15'],
-      }), vuePlugin(),
+        targets: [
+          'Android > 39',
+          'Chrome >= 60',
+          'Safari >= 10.1',
+          'iOS >= 10.3',
+          'Firefox >= 54',
+          'Edge >= 15',
+        ],
+      }),
+      vuePlugin(),
+      inject({
+        $: 'jquery',
+        jQuery: 'jquery',
+      }),
     ],
     css: {
       preprocessorOptions: {
@@ -58,5 +67,5 @@ export default ({
         },
       },
     },
-  };
-};
+  }
+}

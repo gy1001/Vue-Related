@@ -7,6 +7,9 @@ dependencies:
   jquery:
     specifier: ^3.6.4
     version: 3.6.4
+  rollup-plugin-inject:
+    specifier: ^3.0.2
+    version: 3.0.2
   vue:
     specifier: ^3.2.47
     version: 3.2.47
@@ -1747,6 +1750,10 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
+  /estree-walker@0.6.1:
+    resolution: {integrity: sha1-UwSRQ/QMbrkYsjZx0f4yGfOhs2I=}
+    dev: false
+
   /estree-walker@2.0.2:
     resolution: {integrity: sha1-UvAQF4wqTBF6d1fP6UKtt9LaTKw=}
 
@@ -3416,6 +3423,21 @@ packages:
     dependencies:
       glob: 7.2.3
     dev: true
+
+  /rollup-plugin-inject@3.0.2:
+    resolution: {integrity: sha1-5CM4Vb+6bAwSoxL9Zknf+aE+6fQ=}
+    deprecated: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-inject.
+    dependencies:
+      estree-walker: 0.6.1
+      magic-string: 0.25.9
+      rollup-pluginutils: 2.8.2
+    dev: false
+
+  /rollup-pluginutils@2.8.2:
+    resolution: {integrity: sha1-cvKvB0i1kjZNvTOJ5gDlqURKNR4=}
+    dependencies:
+      estree-walker: 0.6.1
+    dev: false
 
   /rollup@2.79.1:
     resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
