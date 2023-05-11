@@ -6,35 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>performance-test</title>
   </head>
+  <script>
+    function callback(list, ob) {
+      list.getEntries().forEach((e) => {
+        console.log(e)
+      })
+    }
+    let observer = new PerformanceObserver(callback)
+    // 这里可以看到的前端 DOM 加载性能
+    // observer.observe({ entryTypes: ['element'] })
+    // observer.observe({ entryTypes: ['navigation'] })
+    observer.observe({ entryTypes: ['paint'] })
+    // observer.observe({ entryTypes: ['mark', 'measure'] })
+  </script>
   <body>
     <img
       src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg"
       alt=""
+      elementtiming="big-image"
     />
   </body>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
   <script>
-    window.onload = function () {
-      // console.log(JSON.stringify(window.performance, null, 2))
-      // const {
-      //   domainLookupStart,
-      //   domainLookupEnd,
-      //   domComplete,
-      //   domLoading,
-      //   loadEventEnd,
-      //   loadEventStart,
-      // } = window.performance.timing
-      // console.log('dns获取时间', domainLookupEnd - domainLookupStart)
-      // console.log('dom获取时间', domComplete - domLoading)
-      // console.log(dom渲染时间', loadEventEnd, loadEventStart) // 这时还没渲染，不准确
-      const perfEntries = window.performance.getEntries()
-      const paint = window.performance.getEntriesByType('paint')
-      console.log(paint)
-      const fp = paint.find((e) => e.name === 'first-paint').startTime
-      const fcp = paint.find(
-        (e) => e.name === 'first-contentful-paint',
-      ).startTime
-      console.log(fp, fcp)
-    }
+    //   window.onload = function () {
+    //     // console.log(JSON.stringify(window.performance, null, 2))
+    //     // const {
+    //     //   domainLookupStart,
+    //     //   domainLookupEnd,
+    //     //   domComplete,
+    //     //   domLoading,
+    //     //   loadEventEnd,
+    //     //   loadEventStart,
+    //     // } = window.performance.timing
+    //     // console.log('dns获取时间', domainLookupEnd - domainLookupStart)
+    //     // console.log('dom获取时间', domComplete - domLoading)
+    //     // console.log(dom渲染时间', loadEventEnd, loadEventStart) // 这时还没渲染，不准确
+    //     const perfEntries = window.performance.getEntries()
+    //     const paint = window.performance.getEntriesByType('paint')
+    //     console.log(paint)
+    //     const fp = paint.find((e) => e.name === 'first-paint').startTime
+    //     const fcp = paint.find(
+    //       (e) => e.name === 'first-contentful-paint',
+    //     ).startTime
+    //     console.log(fp, fcp)
+    //   }
+    //
+
+    // 以一个标志开始。
+    performance.mark('mySetTimeout-start')
+
+    // 等待一些时间。
+    setTimeout(function () {
+      // 标志时间的结束。
+      performance.mark('mySetTimeout-end')
+
+      // 测量两个不同的标志。
+      performance.measure(
+        'mySetTimeout',
+        'mySetTimeout-start',
+        'mySetTimeout-end',
+      )
+
+      // 清除存储的标志位
+      performance.clearMarks()
+      performance.clearMeasures()
+    }, 1000)
   </script>
 </html>
