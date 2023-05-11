@@ -58,7 +58,7 @@ function runServer(args = {}) {
     '--port 8080',
     '--config ' + config,
     '--customWebpackPath ' + customWebpackPath,
-    '--stop-server ' + stopServer,
+    '--stop-server ' + (!!stopServer ? true : ''),
   ]
   child = cp.fork(srciprtPath, configParams)
   // child.on('message', (data) => {
