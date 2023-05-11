@@ -36,6 +36,7 @@ const build = require('../lib/build/buildServer')
     program
       .command('build')
       .option('-c --config <config>', '配置文件路径')
+      .option('--stop-server', '停止服务')
       .option('--custom-webpack-path <customeWebpackPath>', '自定义webpack路径')
       .description('build server by imooc-build')
       .allowUnknownOption()

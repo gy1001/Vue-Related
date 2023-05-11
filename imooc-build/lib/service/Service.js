@@ -40,6 +40,60 @@ class Service {
     }
   }
 
+  async build() {
+    await this.resolveConfig()
+    await this.registerWebpackConfig()
+    await this.registerHooks()
+    await this.emitHooks(HOOK_START)
+    await this.registerPlugin()
+    await this.runPlugin()
+    if (!this.args.stopServer) {
+      await this.initWebpack()
+      await this.doBuileService()
+      //完成 webpack 配置（借助plugin webpack.config.js）
+      // 完成 webpack-dev-server 的启动
+      // log.verbose('this.webpack', this.webpack)
+    }
+  }
+
+  doBuileService() {
+    let compiler
+    try {
+      const selfWebapck = require(this.webpack)
+      const webpackConfig = this.webpackConfig.toConfig()
+      compiler = selfWebapck(webpackConfig, (err, stats) => {
+        if (err) {
+          log.error('ERROR!', err)
+        } else {
+          const result = stats.toJson({
+            all: false,
+            errors: true,
+            warnings: true,
+            timings: true,
+          })
+          if (result.errors && result.errors.length > 0) {
+            log.error('COMPILE ERROR')
+            result.errors.forEach((error) => {
+              log.error('ERROR MESSAGE: ', error.message)
+            })
+          } else if (result.warnings && result.warnings.length > 0) {
+            log.warn('COMPILE WARNING')
+            result.warnings.forEach((warning) => {
+              log.warn('WARNING MESSAGE: ', warning.message)
+            })
+          } else {
+            log.info(
+              'COMPILE SUCCESSFULLY!',
+              'Compile finish in ' + result.time / 1000 + 's',
+            )
+          }
+        }
+      })
+    } catch (error) {
+      log.error('service startServer', error)
+    }
+  }
+
   async initWebpack() {
     // 从 config 中获取 CustomeWebpackPath 属性
     // CustomeWebpackPath存在shi，则使用改地址应用 webpack
