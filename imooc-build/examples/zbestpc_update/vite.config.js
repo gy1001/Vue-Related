@@ -2,7 +2,8 @@
 import legacyPlugin from '@vitejs/plugin-legacy'
 import * as path from 'path'
 import vuePlugin from '@vitejs/plugin-vue'
-import inject from 'rollup-plugin-inject'
+// import inject from 'rollup-plugin-inject'
+import inject from '@rollup/plugin-inject'
 // @see https://cn.vitejs.dev/config/
 export default ({ command, mode }) => {
   let rollupOptions = {}
