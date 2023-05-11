@@ -28,7 +28,13 @@
       // console.log('dom获取时间', domComplete - domLoading)
       // console.log(dom渲染时间', loadEventEnd, loadEventStart) // 这时还没渲染，不准确
       const perfEntries = window.performance.getEntries()
-      console.log(perfEntries)
+      const paint = window.performance.getEntriesByType('paint')
+      console.log(paint)
+      const fp = paint.find((e) => e.name === 'first-paint').startTime
+      const fcp = paint.find(
+        (e) => e.name === 'first-contentful-paint',
+      ).startTime
+      console.log(fp, fcp)
     }
   </script>
 </html>
