@@ -4,6 +4,7 @@ import {
   effectScope,
   reactive,
   computed,
+  toRefs,
 } from 'vue'
 import { SymbolPinia } from './rootStore'
 
@@ -25,7 +26,8 @@ export function defineStore(idOrOptions: any, setup?: any) {
     const store = reactive({})
     function setup() {
       pinia.state[id] = state ? state() : {}
-      const localState = pinia.state[id]
+      // 这里需要增加 toRefs ，否则 getter 不是响应式的，
+      const localState = toRefs(pinia.state[id])
       const gettersValue = Object.keys(getters || {}).reduce(
         (computedGetters: any, name) => {
           computedGetters[name] = computed(() => {
@@ -37,7 +39,6 @@ export function defineStore(idOrOptions: any, setup?: any) {
         },
         {},
       )
-      console.log(gettersValue)
       return Object.assign(localState, actions, gettersValue) // 这个地方的装填还要扩展
     }
 
