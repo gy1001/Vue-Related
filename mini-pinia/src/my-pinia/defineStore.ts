@@ -1,4 +1,4 @@
-import { getCurrentInstance, inject, effectScope } from 'vue'
+import { getCurrentInstance, inject, effectScope, reactive } from 'vue'
 import { SymbolPinia } from './rootStore'
 
 export function defineStore(idOrOptions: any, setup?: any) {
@@ -16,13 +16,26 @@ export function defineStore(idOrOptions: any, setup?: any) {
     // createOptionsStore拿到用户传的state、getters、actions
     const { state, actions, getters } = options
     let scope
-    function setup() {}
+    const store = reactive({})
+    function setup() {
+      pinia.state[id] = state ? state() : {}
+      const localState = pinia.state[id]
+      return localState
+    }
 
+    // _e 能停止所有的 scope
+    // 每一个 store 还能停止自己的
     // 我们要让外面的effectScope能够停止所有的store，也要让每个store能停止自己
-    pinia._e.run(() => {
+    const setupStore = pinia._e.run(() => {
       scope = effectScope()
       return scope.run(() => setup())
     })
+
+    // setupStore
+    Object.assign(store, setupStore)
+
+    pinia._s.set(id, store)
+    console.log(store)
   }
 
   function useStore() {
@@ -36,6 +49,8 @@ export function defineStore(idOrOptions: any, setup?: any) {
     if (!pinia._s.has(id)) {
       createOptionsStore(id, options, pinia)
     }
+    const store = pinia._s.get(id)
+    return store
   }
 
   // 返回useStore函数，内部注册一个Store

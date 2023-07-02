@@ -1,4 +1,5 @@
-import { defineStore } from 'pinia'
+// import { defineStore } from 'pinia'
+import { defineStore } from '../my-pinia'
 
 export const UseCountStore = defineStore('count', {
   state: () => {
