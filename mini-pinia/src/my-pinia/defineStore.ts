@@ -1,4 +1,10 @@
-import { getCurrentInstance, inject, effectScope, reactive } from 'vue'
+import {
+  getCurrentInstance,
+  inject,
+  effectScope,
+  reactive,
+  computed,
+} from 'vue'
 import { SymbolPinia } from './rootStore'
 
 export function defineStore(idOrOptions: any, setup?: any) {
@@ -20,7 +26,19 @@ export function defineStore(idOrOptions: any, setup?: any) {
     function setup() {
       pinia.state[id] = state ? state() : {}
       const localState = pinia.state[id]
-      return localState
+      const gettersValue = Object.keys(getters || {}).reduce(
+        (computedGetters: any, name) => {
+          computedGetters[name] = computed(() => {
+            // 计算属性具有缓存的性质
+            // 我们需要获取当前的 store 是谁
+            return getters[name].call(store, store)
+          })
+          return computedGetters
+        },
+        {},
+      )
+      console.log(gettersValue)
+      return Object.assign(localState, actions, gettersValue) // 这个地方的装填还要扩展
     }
 
     // _e 能停止所有的 scope
@@ -30,6 +48,23 @@ export function defineStore(idOrOptions: any, setup?: any) {
       scope = effectScope()
       return scope.run(() => setup())
     })
+
+    function wrapAction(name: string, action: Function) {
+      return function () {
+        // 触发 action 的时候，可以触发一些额外的逻辑
+        // actions里面有this问题，所以我们要处理actions的方法里的this
+        let result = action.apply(store, arguments)
+        // 返回值也可以做处理
+        return result
+      }
+    }
+
+    for (let key in setupStore) {
+      const prop = setupStore[key] // 拿到对应的值
+      if (typeof prop === 'function') {
+        setupStore[key] = wrapAction(key, prop) // 对 action 可以进行扩展 Aop 思想
+      }
+    }
 
     // setupStore
     Object.assign(store, setupStore)
