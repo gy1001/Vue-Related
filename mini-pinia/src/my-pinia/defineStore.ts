@@ -18,6 +18,8 @@ export function defineStore(idOrOptions: any, setup?: any) {
     options = idOrOptions
     id = idOrOptions.id
   }
+  // 第二个参数是函数
+  const isSetupStore = typeof setup === 'function'
 
   function createOptionsStore(id: string, options: any, pinia: any) {
     // createOptionsStore拿到用户传的state、getters、actions
@@ -71,7 +73,6 @@ export function defineStore(idOrOptions: any, setup?: any) {
     Object.assign(store, setupStore)
 
     pinia._s.set(id, store)
-    console.log(store)
   }
 
   function useStore() {
@@ -83,10 +84,45 @@ export function defineStore(idOrOptions: any, setup?: any) {
     // 看一下pinia上有没有这个store，如果没有，说明是第一次使用这个store，
     // 那么我们就去创建一个调用createOptionsStore去创建一个store
     if (!pinia._s.has(id)) {
-      createOptionsStore(id, options, pinia)
+      if (isSetupStore) {
+        createSetUpStore(id, setup, pinia)
+      } else {
+        createOptionsStore(id, options, pinia)
+      }
     }
     const store = pinia._s.get(id)
     return store
+  }
+
+  function createSetUpStore(id, setup, pinia) {
+    const store = reactive({}) // 每一个 store 都是一个响应式对象
+    let scope
+    const setupStore = pinia._e.run(() => {
+      scope = effectScope()
+      return scope.run(() => setup())
+    })
+
+    function wrapAction(name: string, action: Function) {
+      return function () {
+        // 触发 action 的时候，可以触发一些额外的逻辑
+        // actions里面有this问题，所以我们要处理actions的方法里的this
+        let result = action.apply(store, arguments)
+        // 返回值也可以做处理
+        return result
+      }
+    }
+
+    for (let key in setupStore) {
+      const prop = setupStore[key] // 拿到对应的值
+      if (typeof prop === 'function') {
+        setupStore[key] = wrapAction(key, prop) // 对 action 可以进行扩展 Aop 思想
+      }
+    }
+
+    // setupStore
+    Object.assign(store, setupStore)
+
+    pinia._s.set(id, store)
   }
 
   // 返回useStore函数，内部注册一个Store
