@@ -8,6 +8,8 @@ vue-mustache/node_modules
 dist
 .DS_Store
 vue-reactivity/node_modules
+mini-vue-router/node_modules
+mini-vue/node_modules
 imooc-build/samples/node_modules
 vue-snabbdom/node_modules
 imooc-build/examples/zbestpc_update/node_modules/
