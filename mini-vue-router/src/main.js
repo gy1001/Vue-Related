@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import VueRouter from 'vue-router'
+// import VueRouter from 'vue-router'
+import VueRouter from './my-vue-router'
 
 Vue.config.productionTip = false
 
@@ -15,6 +16,20 @@ Vue.config.productionTip = false
 // 或者，只是一个组件配置对象。
 // 我们晚点再讨论嵌套路由。
 const routes = [
+  {
+    path: '/home',
+    component: () => import('./components/User.vue'),
+    children: [
+      {
+        path: 'foo',
+        component: () => import('./components/Foo.vue'),
+        children: [
+          { path: '/bar2', component: () => import('./components/Bar.vue') },
+        ],
+      },
+      { path: 'bar', component: () => import('./components/Bar.vue') },
+    ],
+  },
   { path: '/foo', component: () => import('./components/Foo.vue') },
   { path: '/bar', component: () => import('./components/Bar.vue') },
 ]
