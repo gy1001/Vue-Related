@@ -61,6 +61,8 @@ export default class VueRouter {
 
     // 初始化router-view组件
     this.initView()
+    // 注册事件
+    this.initEvent()
   }
 
   initLink() {
@@ -84,7 +86,7 @@ export default class VueRouter {
         locationHref(e) {
           // 阻止a标签默认事件，这里需要阻止a标签的href跳转，因为a标签的href跳转是会让浏览器直接向服务器去发送请求的
           e.preventDefault()
-          if (this.$router.mode === 'history') {
+          if (this.mode === 'history') {
             console.log('TODO history')
           } else {
             window.location.hash = `#${this.to}`
@@ -101,7 +103,7 @@ export default class VueRouter {
       render(h) {
         // 从路由表中获取当前path对应的component组件
         let component = null
-        if (this.$router.mode === 'history') {
+        if (that.mode === 'history') {
           console.log('TODO history')
         } else {
           // hash 模式下，截图#后面的地址作为path路径，然后再去路由表中匹配对应的组件
@@ -112,5 +114,20 @@ export default class VueRouter {
         return h(component)
       },
     })
+  }
+
+  initEvent() {
+    if (this.mode === 'history') {
+      console.log('TODO history')
+    } else {
+      //  页面首次加载时，加载当前路由对应的组件
+      window.addEventListener('load', () => {
+        // 如果没有hash符，添加hash符
+        this.data.current = location.hash || '/'
+      })
+      window.addEventListener('hashchange', () => {
+        this.data.current = location.hash
+      })
+    }
   }
 }
