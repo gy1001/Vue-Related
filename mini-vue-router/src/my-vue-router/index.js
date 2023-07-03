@@ -63,7 +63,54 @@ export default class VueRouter {
     this.initView()
   }
 
-  initLink() {}
+  initLink() {
+    _Vue.component('router-link', {
+      props: {
+        to: String,
+      },
+      render(h) {
+        return h(
+          'a',
+          {
+            attrs: { href: this.to },
+            on: {
+              click: this.locationHref,
+            },
+          },
+          [this.$slots.default],
+        )
+      },
+      methods: {
+        locationHref(e) {
+          // 阻止a标签默认事件，这里需要阻止a标签的href跳转，因为a标签的href跳转是会让浏览器直接向服务器去发送请求的
+          e.preventDefault()
+          if (this.$router.mode === 'history') {
+            console.log('TODO history')
+          } else {
+            window.location.hash = `#${this.to}`
+            this.$router.data.current = `#${this.to}`
+          }
+        },
+      },
+    })
+  }
 
-  initView() {}
+  initView() {
+    const that = this
+    _Vue.component('router-view', {
+      render(h) {
+        // 从路由表中获取当前path对应的component组件
+        let component = null
+        if (this.$router.mode === 'history') {
+          console.log('TODO history')
+        } else {
+          // hash 模式下，截图#后面的地址作为path路径，然后再去路由表中匹配对应的组件
+          const path = that.data.current.slice(1, that.data.current.length)
+          component = that.routerMap[path]
+        }
+        // 渲染对应的组件
+        return h(component)
+      },
+    })
+  }
 }
