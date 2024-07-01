@@ -57,26 +57,27 @@ function linkLocale(locale: string) {
     // console.log(Intl.getCanonicalLocales(['EN-US', 'Fr']));
     // Expected output: Array ["en-US", "fr"]
     linkedLocale = Intl.getCanonicalLocales(locale)[0]
+    switch (linkedLocale) {
+      case 'zh-TW':
+      case 'zh-HK':
+      case 'zh-MO':
+        linkedLocale = 'zh-Hant'
+        break
+      case 'zh-CN':
+      case 'zh-SG':
+        linkedLocale = 'zh-Hans'
+        break
+      default:
+        linkedLocale = locale
+    }
+  
+    return linkedLocale
   } catch (error) {
     console.log(`${error.toString()}\n`)
   }
-  switch (linkedLocale) {
-    case 'zh-TW':
-    case 'zh-HK':
-    case 'zh-MO':
-      linkedLocale = 'zh-Hant'
-      break
-    case 'zh-CN':
-    case 'zh-SG':
-      linkedLocale = 'zh-Hans'
-      break
-    default:
-      linkedLocale = locale
-  }
-
-  return linkedLocale
+  
 }
-
+console.log(Intl.DateTimeFormat().resolvedOptions().locale)
 function getLocale() {
   const shellLocale =
     process.env.LC_ALL || // POSIX locale environment variables

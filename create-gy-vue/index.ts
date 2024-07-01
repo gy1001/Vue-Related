@@ -3,6 +3,7 @@
 
 import prompts from 'prompts'
 import { parseArgs } from 'node:util'
+import getLanguage from './utils/getLanguage'
 
 async function init() {
   const cwd = process.cwd();
@@ -29,7 +30,10 @@ async function init() {
 
 
   let targetDir = positionals[0]
-  console.log(targetDir)
+  const defaultProjectName = !targetDir ? 'vue-project' : targetDir
+  console.log(targetDir);
+
+  const language = getLanguage()
 
   let result: {
     projectName?: string
@@ -48,7 +52,16 @@ async function init() {
 
 
   try{
-
+    result = await prompts([
+      {
+        name: 'projectName',
+        type: targetDir ? null : 'text',
+        message: language.projectName.message,
+        initial: defaultProjectName,
+        onState: (state) => (targetDir = String(state.value).trim() || defaultProjectName)
+      }
+    ])
+  
   }catch(error) {
     console.log(error.message)
     process.exit(1)
