@@ -5,7 +5,8 @@
         :class="`${prefixCls}__header-form`"
         :labelWidth="100"
         :schemas="schemas"
-        :showActionButtonGroup="false"
+        :showActionButtonGroup="true"
+        @submit="handleSearchSubmit"
       />
     </template>
 
@@ -60,6 +61,9 @@
   import { PageWrapper } from '@/components/Page';
 
   const prefixCls = 'list-search';
+  const handleSearchSubmit = (e) => {
+    console.log(e);
+  };
 </script>
 <style lang="less" scoped>
   .list-search {

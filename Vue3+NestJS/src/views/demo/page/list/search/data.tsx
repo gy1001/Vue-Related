@@ -24,7 +24,20 @@ export const schemas: FormSchema[] = [
   {
     field: 'field1',
     component: 'InputSearch',
-    label: '项目名',
+    label: '书名',
+    colProps: {
+      span: 8,
+    },
+    componentProps: {
+      onChange: (e: any) => {
+        console.log(e);
+      },
+    },
+  },
+  {
+    field: 'author',
+    component: 'InputSearch',
+    label: '作者',
     colProps: {
       span: 8,
     },

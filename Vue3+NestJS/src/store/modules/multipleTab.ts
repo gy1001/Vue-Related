@@ -134,7 +134,9 @@ export const useMultipleTabStore = defineStore({
       // Existing pages, do not add tabs repeatedly
       const tabHasExits = this.tabList.some((tab, index) => {
         updateIndex = index;
-        return decodeURIComponent(tab.fullPath || tab.path) === decodeURIComponent(fullPath || path);
+        return (
+          decodeURIComponent(tab.fullPath || tab.path) === decodeURIComponent(fullPath || path)
+        );
       });
 
       // If the tab already exists, perform the update operation
@@ -154,7 +156,7 @@ export const useMultipleTabStore = defineStore({
         if (dynamicLevel > 0) {
           // 如果动态路由层级大于 0 了，那么就要限制该路由的打开数限制了
           // 首先获取到真实的路由，使用配置方式减少计算开销.
-          // const realName: string = path.match(/(\S*)\//)![1];
+          // const nickname: string = path.match(/(\S*)\//)![1];
           const realPath = meta?.realPath ?? '';
           // 获取到已经打开的动态路由数, 判断是否大于某一个值
           if (
