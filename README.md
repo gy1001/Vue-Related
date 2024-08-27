@@ -45,3 +45,7 @@ Vue3 从入门到实战 进阶式掌握完整知识体系
 ## Vite
 
 ### 01-vite-demo
+
+## Vue2-stage
+
+学习 vue2 源码课程笔记
