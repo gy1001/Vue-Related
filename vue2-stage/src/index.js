@@ -1,4 +1,10 @@
-export const a = 100
-export const b = 200
+import { initMixin } from './init'
 
-export default { Vue: 1 }
+function Vue(options) {
+  // options 就是用户的选项值
+  this._init()
+}
+
+initMixin(Vue)
+
+export default Vue
