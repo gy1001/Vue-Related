@@ -30,9 +30,6 @@ function proxy(vm, target, key) {
     },
     set(newValue) {
       vm[target][key] = newValue
-      if (typeof newValue === 'object') {
-        // 如果是对象
-      }
     },
   })
 }
