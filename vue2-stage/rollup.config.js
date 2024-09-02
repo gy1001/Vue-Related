@@ -8,7 +8,6 @@ export default {
     name: 'Vue', // 表示打包后在全局增加 Vue 变量 global.Vue
     format: 'umd', // esm es6模块 commonjs 模块 iife 自执行函数 umd
     sourcemap: true, // 需要可以调试源代码
-    exports: 'named',
   },
   plugins: [
     babel({
