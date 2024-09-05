@@ -2,7 +2,11 @@ class Observer {
   constructor(data) {
     // Object.defineProperty 只能劫持已经存在的属性，后增的或者删除的不知道
     // vue2 里面会为此单独写一些 api $set $delete
-    this.walk(data)
+    if (Array.isArray(data)) {
+      // 这里我们可以重写数组中的7个变异方法，是可以修改数组本身的
+    } else {
+      this.walk(data)
+    }
   }
 
   walk(data) {
@@ -31,6 +35,7 @@ export function defineReactive(target, key, value) {
         return
       }
       value = newValue
+      observe(value)
     },
   })
 }
